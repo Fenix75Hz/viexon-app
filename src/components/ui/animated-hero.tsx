@@ -67,7 +67,7 @@ export function Hero() {
     })
 
     animate(glowTargets, {
-      opacity: [0.4, 0.85],
+      opacity: [0.4, 0.84],
       scale: [0.96, 1.04],
       duration: 3400,
       direction: "alternate",
@@ -124,38 +124,38 @@ export function Hero() {
 
   return (
     <div ref={heroRef} className="relative flex flex-col justify-center">
-      <div className="relative overflow-hidden rounded-[34px] border border-black/6 bg-white/60 p-6 shadow-[0_40px_120px_-64px_rgba(18,25,38,0.42)] backdrop-blur-2xl transition-colors duration-500 dark:border-white/8 dark:bg-white/4 dark:shadow-[0_40px_120px_-70px_rgba(0,172,255,0.34)] sm:p-8 lg:p-10 xl:p-12">
+      <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-white/8 p-6 backdrop-blur-2xl transition-colors duration-500 dark:border-white/8 dark:bg-white/4 sm:p-8 lg:p-10 xl:p-12">
         <div
           data-glow
-          className="pointer-events-none absolute -left-10 top-0 h-44 w-44 rounded-full bg-cyan-300/24 blur-3xl dark:bg-cyan-400/18"
+          className="pointer-events-none absolute -left-8 top-8 h-52 w-52 rounded-full bg-cyan-300/22 blur-[100px] dark:bg-cyan-400/18"
         />
         <div
           data-glow
-          className="pointer-events-none absolute -bottom-10 right-6 h-52 w-52 rounded-full bg-blue-300/16 blur-3xl dark:bg-blue-500/16"
+          className="pointer-events-none absolute bottom-0 right-4 h-64 w-64 rounded-full bg-blue-300/14 blur-[120px] dark:bg-blue-500/14"
         />
 
         <div className="relative z-10">
           <div
             data-reveal
-            className="mb-7 inline-flex items-center gap-2 rounded-full border border-black/8 bg-white/72 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.34em] text-slate-600 transition-colors duration-500 dark:border-white/10 dark:bg-white/6 dark:text-cyan-100/72"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.34em] text-slate-600 transition-colors duration-500 dark:text-cyan-100/72"
           >
             <Sparkles className="size-3.5" />
             Landing publica e auth inicial
           </div>
 
-          <div className="space-y-7">
-            <div data-reveal className="space-y-6">
-              <div className="space-y-4">
-                <p className="max-w-xl text-sm font-medium uppercase tracking-[0.3em] text-slate-500 dark:text-cyan-100/60">
+          <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_280px] xl:items-end">
+            <div className="space-y-8">
+              <div data-reveal className="space-y-5">
+                <p className="max-w-xl text-sm font-medium uppercase tracking-[0.32em] text-slate-500 dark:text-cyan-100/60">
                   Plataforma operacional premium
                 </p>
 
-                <h1 className="max-w-4xl text-4xl font-semibold leading-[0.95] tracking-[-0.06em] text-slate-950 dark:text-white sm:text-5xl md:text-6xl xl:text-[72px]">
+                <h1 className="max-w-[10ch] text-[clamp(3.5rem,8vw,7rem)] leading-[0.88] tracking-[-0.05em] text-slate-950 dark:text-white">
                   Gestao premium para
-                  <span className="mt-2.5 block text-slate-700 dark:text-cyan-50/92">
+                  <span className="mt-2 block text-slate-700 dark:text-cyan-50/92">
                     atacado, consignado e
                   </span>
-                  <span className="relative mt-2.5 inline-flex h-[1.08em] min-w-[6.8ch] items-center overflow-hidden align-bottom text-cyan-500 dark:text-cyan-300">
+                  <span className="relative mt-2 inline-flex h-[1.02em] min-w-[6.5ch] items-center overflow-hidden align-bottom text-cyan-500 dark:text-cyan-300">
                     {rotatingWords.map((word, index) => (
                       <span
                         key={word}
@@ -169,68 +169,103 @@ export function Hero() {
                     ))}
                   </span>
                 </h1>
+
+                <p className="max-w-[62ch] text-[15px] leading-8 text-slate-600 dark:text-slate-300 md:text-lg">
+                  O Viexon organiza pedidos, estoque, revendedoras, clientes e
+                  financeiro em uma experiencia unica, refinada e pronta para
+                  operacoes comerciais que exigem clareza, velocidade e controle.
+                </p>
               </div>
 
-              <p className="max-w-[640px] text-[15px] leading-8 text-slate-600 dark:text-slate-300 md:text-lg">
-                O Viexon organiza pedidos, estoque, revendedoras, clientes e
-                financeiro em uma experiencia unica, refinada e pronta para
-                operacoes comerciais que exigem clareza, velocidade e controle.
-              </p>
+              <div data-reveal className="flex flex-col gap-3 sm:flex-row">
+                <a href="#auth-panel">
+                  <Button size="lg" className="group h-12 min-w-[190px] gap-2 rounded-full px-6">
+                    Entrar no Viexon
+                    <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </Button>
+                </a>
+                <a href="#auth-panel">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-12 min-w-[170px] rounded-full border-white/12 bg-white/40 px-6 dark:bg-white/5"
+                  >
+                    Criar conta
+                  </Button>
+                </a>
+              </div>
 
-              <div className="grid max-w-[620px] gap-3 text-sm text-slate-600 dark:text-slate-300 sm:grid-cols-3">
-                <div className="rounded-2xl border border-black/6 bg-white/62 px-4 py-3 dark:border-white/8 dark:bg-white/5">
-                  Fluxo comercial em uma unica visao
-                </div>
-                <div className="rounded-2xl border border-black/6 bg-white/62 px-4 py-3 dark:border-white/8 dark:bg-white/5">
-                  Estoque, repasse e financeiro conectados
-                </div>
-                <div className="rounded-2xl border border-black/6 bg-white/62 px-4 py-3 dark:border-white/8 dark:bg-white/5">
-                  Base pronta para operar com elegancia
-                </div>
+              <div className="grid gap-4 lg:grid-cols-3">
+                {featureCards.map((card) => {
+                  const Icon = card.icon
+
+                  return (
+                    <div
+                      key={card.title}
+                      data-card
+                      className="rounded-[24px] border border-white/10 bg-white/10 p-5 backdrop-blur-xl dark:border-white/8 dark:bg-white/5"
+                    >
+                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/16 bg-cyan-400/12 text-cyan-700 dark:border-cyan-400/18 dark:bg-cyan-400/10 dark:text-cyan-200">
+                        <Icon className="size-5" />
+                      </div>
+                      <h3 className="text-[1.55rem] leading-none text-slate-900 dark:text-white">
+                        {card.title}
+                      </h3>
+                      <p className="mt-3 max-w-[24ch] text-sm leading-6 text-slate-600 dark:text-slate-300">
+                        {card.description}
+                      </p>
+                    </div>
+                  )
+                })}
               </div>
             </div>
 
-            <div data-reveal className="flex flex-col gap-3 sm:flex-row">
-              <a href="#auth-panel">
-                <Button size="lg" className="group h-12 min-w-[180px] gap-2 rounded-full px-6">
-                  Entrar no Viexon
-                  <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-                </Button>
-              </a>
-              <a href="#auth-panel">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="h-12 min-w-[160px] rounded-full border-white/12 bg-white/50 px-6 dark:bg-white/5"
-                >
-                  Criar conta
-                </Button>
-              </a>
-            </div>
-          </div>
+            <div data-reveal className="space-y-4 xl:pb-2">
+              <div className="rounded-[26px] border border-white/10 bg-white/10 p-5 backdrop-blur-xl dark:border-white/8 dark:bg-white/5">
+                <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500 dark:text-cyan-100/55">
+                  Visibilidade
+                </p>
+                <p className="mt-3 text-4xl font-semibold text-slate-950 dark:text-white">
+                  24h
+                </p>
+                <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  Acompanhe pedidos, repasses e indicadores sem perder contexto
+                  operacional.
+                </p>
+              </div>
 
-          <div className="mt-10 grid gap-4 xl:grid-cols-3">
-            {featureCards.map((card) => {
-              const Icon = card.icon
-
-              return (
-                <div
-                  key={card.title}
-                  data-card
-                  className="rounded-[24px] border border-black/6 bg-white/68 p-5 opacity-0 transition-colors duration-500 dark:border-white/8 dark:bg-white/5"
-                >
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/16 bg-cyan-400/12 text-cyan-700 dark:border-cyan-400/18 dark:bg-cyan-400/10 dark:text-cyan-200">
-                    <Icon className="size-5" />
+              <div className="rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.24),rgba(255,255,255,0.1))] p-5 backdrop-blur-xl dark:border-white/8 dark:bg-[linear-gradient(180deg,rgba(18,35,66,0.7),rgba(7,17,29,0.55))]">
+                <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500 dark:text-cyan-100/55">
+                  Estrutura
+                </p>
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-center justify-between rounded-2xl bg-white/55 px-4 py-3 dark:bg-white/6">
+                    <span className="text-sm text-slate-600 dark:text-slate-300">
+                      Pedidos e consignado
+                    </span>
+                    <span className="text-sm font-semibold text-slate-950 dark:text-white">
+                      Integrado
+                    </span>
                   </div>
-                  <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-                    {card.title}
-                  </h3>
-                  <p className="mt-2 max-w-[28ch] text-sm leading-6 text-slate-600 dark:text-slate-300">
-                    {card.description}
-                  </p>
+                  <div className="flex items-center justify-between rounded-2xl bg-white/55 px-4 py-3 dark:bg-white/6">
+                    <span className="text-sm text-slate-600 dark:text-slate-300">
+                      Estoque e repasse
+                    </span>
+                    <span className="text-sm font-semibold text-slate-950 dark:text-white">
+                      Em tempo real
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-2xl bg-white/55 px-4 py-3 dark:bg-white/6">
+                    <span className="text-sm text-slate-600 dark:text-slate-300">
+                      Financeiro e margem
+                    </span>
+                    <span className="text-sm font-semibold text-slate-950 dark:text-white">
+                      Com contexto
+                    </span>
+                  </div>
                 </div>
-              )
-            })}
+              </div>
+            </div>
           </div>
         </div>
       </div>

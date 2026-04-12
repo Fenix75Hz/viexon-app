@@ -1,18 +1,19 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google"
 
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { ThemeScript } from "@/components/providers/theme-script"
 import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta-sans",
   subsets: ["latin"],
 })
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const cormorantGaramond = Cormorant_Garamond({
+  variable: "--font-cormorant-garamond",
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
 })
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${plusJakartaSans.variable} ${cormorantGaramond.variable}`}
     >
       <head>
         <ThemeScript />

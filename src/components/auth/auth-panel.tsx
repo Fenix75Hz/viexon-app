@@ -183,7 +183,7 @@ export function AuthPanel() {
                 Acesso seguro
               </span>
               <div>
-                <h2 className="text-[30px] font-semibold tracking-tight text-slate-950 dark:text-white">
+                <h2 className="font-sans text-[30px] font-semibold tracking-tight text-slate-950 dark:text-white">
                   {session ? "Sessao ativa" : mode === "login" ? "Entrar no Viexon" : "Criar conta"}
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
@@ -263,7 +263,7 @@ export function AuthPanel() {
                     onChange={(event) =>
                       setValues((current) => ({ ...current, email: event.target.value }))
                     }
-                    className="h-14 w-full rounded-2xl border border-black/10 bg-white/85 px-4 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-300/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-cyan-300 dark:focus:ring-cyan-400/15"
+                    className="h-14 w-full rounded-2xl border border-black/10 bg-white/88 px-4 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-300/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-cyan-300 dark:focus:ring-cyan-400/15"
                     placeholder="voce@empresa.com"
                   />
                 </label>
@@ -281,7 +281,7 @@ export function AuthPanel() {
                     onChange={(event) =>
                       setValues((current) => ({ ...current, password: event.target.value }))
                     }
-                    className="h-14 w-full rounded-2xl border border-black/10 bg-white/85 px-4 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-300/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-cyan-300 dark:focus:ring-cyan-400/15"
+                    className="h-14 w-full rounded-2xl border border-black/10 bg-white/88 px-4 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-300/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-cyan-300 dark:focus:ring-cyan-400/15"
                     placeholder="Minimo de 6 caracteres"
                   />
                 </label>
