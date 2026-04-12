@@ -38,7 +38,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggleTheme}
       aria-label={`Ativar modo ${theme === "dark" ? "claro" : "escuro"}`}
-      className="group relative inline-flex h-14 w-[88px] items-center rounded-full border border-white/10 bg-white/70 p-1.5 shadow-[0_18px_40px_-22px_rgba(0,0,0,0.28)] backdrop-blur-xl transition-colors duration-500 dark:border-white/10 dark:bg-white/5"
+      className="group relative inline-flex h-14 w-[86px] items-center rounded-full border border-black/8 bg-white/68 p-1.5 shadow-[0_18px_40px_-22px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-colors duration-500 dark:border-white/10 dark:bg-white/5"
     >
       <span className="pointer-events-none absolute inset-0 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.58),rgba(255,255,255,0.08))] opacity-80 dark:bg-[linear-gradient(135deg,rgba(69,195,255,0.16),rgba(9,15,28,0.05))]" />
       <span className="relative z-10 flex w-full items-center justify-between px-1.5 text-slate-500 dark:text-cyan-100/85">

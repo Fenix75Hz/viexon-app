@@ -171,19 +171,19 @@ export function AuthPanel() {
     <div
       id="auth-panel"
       ref={containerRef}
-      className="relative w-full max-w-[430px] opacity-0"
+      className="relative w-full max-w-[440px] opacity-0"
     >
-      <div className="absolute inset-0 rounded-[32px] bg-[radial-gradient(circle_at_top,rgba(29,188,255,0.18),transparent_42%)] blur-3xl dark:bg-[radial-gradient(circle_at_top,rgba(24,185,255,0.24),transparent_42%)]" />
-      <div className="relative overflow-hidden rounded-[32px] border border-black/6 bg-white/78 p-4 shadow-[0_28px_80px_-36px_rgba(15,23,42,0.42)] backdrop-blur-2xl transition-colors duration-500 dark:border-white/10 dark:bg-[#07111d]/72 dark:shadow-[0_32px_90px_-40px_rgba(0,172,255,0.45)]">
-        <div className="rounded-[28px] border border-black/5 bg-white/72 p-7 transition-colors duration-500 dark:border-white/8 dark:bg-white/3">
+      <div className="absolute inset-0 rounded-[36px] bg-[radial-gradient(circle_at_top,rgba(29,188,255,0.18),transparent_42%)] blur-3xl dark:bg-[radial-gradient(circle_at_top,rgba(24,185,255,0.18),transparent_42%)]" />
+      <div className="relative overflow-hidden rounded-[32px] border border-black/6 bg-white/78 p-4 shadow-[0_28px_80px_-36px_rgba(15,23,42,0.36)] backdrop-blur-2xl transition-colors duration-500 dark:border-white/10 dark:bg-[#07111d]/72 dark:shadow-[0_32px_90px_-48px_rgba(0,172,255,0.38)]">
+        <div className="rounded-[28px] border border-black/5 bg-white/72 p-6 transition-colors duration-500 dark:border-white/8 dark:bg-white/3 sm:p-7">
           <div className="mb-6 flex items-start justify-between gap-4">
             <div className="space-y-2">
-              <span className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-black/4 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.26em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-cyan-100/70">
+              <span className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-black/4 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.28em] text-slate-600 dark:border-white/10 dark:bg-white/6 dark:text-cyan-100/70">
                 <ShieldCheck className="size-3.5" />
                 Acesso seguro
               </span>
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
+                <h2 className="text-[30px] font-semibold tracking-tight text-slate-950 dark:text-white">
                   {session ? "Sessao ativa" : mode === "login" ? "Entrar no Viexon" : "Criar conta"}
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
@@ -263,7 +263,7 @@ export function AuthPanel() {
                     onChange={(event) =>
                       setValues((current) => ({ ...current, email: event.target.value }))
                     }
-                    className="h-13 w-full rounded-2xl border border-black/10 bg-white/85 px-4 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-300/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-cyan-300 dark:focus:ring-cyan-400/15"
+                    className="h-14 w-full rounded-2xl border border-black/10 bg-white/85 px-4 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-300/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-cyan-300 dark:focus:ring-cyan-400/15"
                     placeholder="voce@empresa.com"
                   />
                 </label>
@@ -281,7 +281,7 @@ export function AuthPanel() {
                     onChange={(event) =>
                       setValues((current) => ({ ...current, password: event.target.value }))
                     }
-                    className="h-13 w-full rounded-2xl border border-black/10 bg-white/85 px-4 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-300/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-cyan-300 dark:focus:ring-cyan-400/15"
+                    className="h-14 w-full rounded-2xl border border-black/10 bg-white/85 px-4 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-300/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-cyan-300 dark:focus:ring-cyan-400/15"
                     placeholder="Minimo de 6 caracteres"
                   />
                 </label>
@@ -307,7 +307,12 @@ export function AuthPanel() {
                   </div>
                 ) : null}
 
-                <Button type="submit" size="lg" className="w-full" disabled={loading}>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="h-14 w-full rounded-full text-sm font-semibold"
+                  disabled={loading}
+                >
                   {loading ? (
                     <>
                       <LoaderCircle className="size-4 animate-spin" />
