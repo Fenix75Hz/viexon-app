@@ -1,0 +1,1 @@
+-- Seed intencionalmente vazio neste estágio inicial.
