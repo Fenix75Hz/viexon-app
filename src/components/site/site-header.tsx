@@ -94,6 +94,31 @@ function SunIcon() {
   );
 }
 
+function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="h-[18px] w-[18px] fill-none stroke-current"
+    >
+      {open ? (
+        <path
+          d="M7 7l10 10M17 7 7 17"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : (
+        <>
+          <path d="M4.5 7.5h15" strokeWidth="1.7" strokeLinecap="round" />
+          <path d="M4.5 12h15" strokeWidth="1.7" strokeLinecap="round" />
+          <path d="M4.5 16.5h15" strokeWidth="1.7" strokeLinecap="round" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 function ThemeToggle({
   mounted,
   theme,
@@ -178,39 +203,87 @@ export function SiteHeader({
   wrapperClassName = "absolute inset-x-0 top-0 z-20 px-4 pt-4 sm:px-6 lg:px-8",
 }: SiteHeaderProps) {
   const { mounted, theme, toggleTheme } = useThemeMode();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <header className={wrapperClassName}>
-      <nav className="mx-auto flex w-full max-w-[1400px] items-center justify-between rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] px-4 py-3 shadow-[0_24px_80px_var(--shadow-soft)] backdrop-blur-2xl transition-[background-color,border-color,box-shadow,transform] duration-500 sm:px-5">
-        <Link aria-label="Viexon" href="/" className="shrink-0">
-          <ViexonLogo />
-        </Link>
+      <nav className="mx-auto w-full max-w-[1400px] rounded-[30px] border border-[var(--border-soft)] bg-[var(--nav-surface)] px-4 py-3 shadow-[0_24px_80px_var(--shadow-soft)] backdrop-blur-2xl transition-[background-color,border-color,box-shadow,transform] duration-500 sm:rounded-full sm:px-5">
+        <div className="flex items-center justify-between gap-3">
+          <Link aria-label="Viexon" href="/" className="shrink-0">
+            <ViexonLogo />
+          </Link>
 
-        <div className="hidden items-center gap-8 lg:flex">
-          {navigationItems.map((item) => (
-            <NavLink
-              key={item.label}
-              href={item.href}
-              label={item.label}
-              isCurrent={item.label === currentLabel}
-            />
-          ))}
+          <div className="hidden items-center gap-8 lg:flex">
+            {navigationItems.map((item) => (
+              <NavLink
+                key={item.label}
+                href={item.href}
+                label={item.label}
+                isCurrent={item.label === currentLabel}
+              />
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <button
+              type="button"
+              aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen((current) => !current)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] text-[var(--text-primary)] shadow-[0_14px_38px_var(--shadow-soft)] transition-[background-color,border-color,box-shadow,transform] duration-500 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface-soft)] hover:shadow-[0_18px_54px_var(--shadow-strong)] lg:hidden"
+            >
+              <MenuIcon open={isMobileMenuOpen} />
+            </button>
+            <ThemeToggle mounted={mounted} theme={theme} onToggle={toggleTheme} />
+            <Link
+              href={loginHref}
+              className="hidden rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] shadow-[0_14px_38px_var(--shadow-soft)] backdrop-blur-xl transition-[background-color,border-color,box-shadow,transform] duration-500 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface-soft)] hover:shadow-[0_18px_54px_var(--shadow-strong)] sm:inline-flex"
+            >
+              Entrar
+            </Link>
+            <Link
+              href={primaryHref}
+              className="inline-flex rounded-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_var(--accent-glow)] transition-[transform,box-shadow,filter] duration-500 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_var(--accent-glow)]"
+            >
+              Começar
+            </Link>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2.5 sm:gap-3">
-          <ThemeToggle mounted={mounted} theme={theme} onToggle={toggleTheme} />
-          <Link
-            href={loginHref}
-            className="hidden rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] shadow-[0_14px_38px_var(--shadow-soft)] backdrop-blur-xl transition-[background-color,border-color,box-shadow,transform] duration-500 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface-soft)] hover:shadow-[0_18px_54px_var(--shadow-strong)] sm:inline-flex"
-          >
-            Entrar
-          </Link>
-          <Link
-            href={primaryHref}
-            className="inline-flex rounded-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_var(--accent-glow)] transition-[transform,box-shadow,filter] duration-500 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_var(--accent-glow)]"
-          >
-            Começar
-          </Link>
+        <div
+          className={`overflow-hidden transition-[max-height,opacity,margin] duration-300 lg:hidden ${
+            isMobileMenuOpen ? "mt-4 max-h-[420px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="rounded-[26px] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-3 shadow-[0_18px_50px_var(--shadow-soft)]">
+            <div className="flex flex-col gap-1">
+              {navigationItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  aria-current={item.label === currentLabel ? "page" : undefined}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`rounded-2xl px-4 py-3 text-sm font-medium transition-colors duration-300 ${
+                    item.label === currentLabel
+                      ? "bg-[var(--surface-strong)] text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:bg-[var(--surface-soft)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-3 border-t border-[var(--border-soft)] pt-3 sm:hidden">
+              <Link
+                href={loginHref}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex justify-center rounded-2xl border border-[var(--border-soft)] bg-[var(--nav-surface)] px-4 py-3 text-sm font-medium text-[var(--text-primary)] transition-[background-color,border-color] duration-300 hover:border-[var(--border-strong)] hover:bg-[var(--surface-soft)]"
+              >
+                Entrar
+              </Link>
+            </div>
+          </div>
         </div>
       </nav>
     </header>
