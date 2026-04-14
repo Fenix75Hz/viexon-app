@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Sora } from "next/font/google";
+import Script from "next/script";
 
 import "./globals.css";
 
@@ -46,7 +47,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${displayFont.variable} ${bodyFont.variable}`}>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script id="viexon-theme-script" strategy="beforeInteractive">
+          {themeScript}
+        </Script>
         {children}
       </body>
     </html>

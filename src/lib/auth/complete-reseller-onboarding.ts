@@ -1,5 +1,7 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { CurrentUserContext } from "@/types/database";
+import type { CurrentUserContext, Database } from "@/types/database";
 
 type CompleteResellerOnboardingInput = {
   fullName: string;
@@ -11,8 +13,9 @@ type CompleteResellerOnboardingInput = {
 
 export async function completeResellerOnboarding(
   input: CompleteResellerOnboardingInput,
+  supabaseClient?: SupabaseClient<Database>,
 ): Promise<CurrentUserContext> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = supabaseClient ?? (await createSupabaseServerClient());
   const { data, error } = await supabase.rpc("complete_reseller_onboarding", {
     p_full_name: input.fullName,
     p_phone: input.phone ?? null,

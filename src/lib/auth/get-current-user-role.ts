@@ -3,6 +3,21 @@ import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CurrentUserContext, UserRole } from "@/types/database";
 
+function isMissingAuthSessionError(error: unknown) {
+  if (error instanceof Error) {
+    return (
+      error.name === "AuthSessionMissingError" || error.message === "Auth session missing!"
+    );
+  }
+
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    error.message === "Auth session missing!"
+  );
+}
+
 export const getCurrentUserContext = cache(async (): Promise<CurrentUserContext | null> => {
   const supabase = await createSupabaseServerClient();
   const {
@@ -11,6 +26,10 @@ export const getCurrentUserContext = cache(async (): Promise<CurrentUserContext 
   } = await supabase.auth.getUser();
 
   if (authError) {
+    if (isMissingAuthSessionError(authError)) {
+      return null;
+    }
+
     throw authError;
   }
 
