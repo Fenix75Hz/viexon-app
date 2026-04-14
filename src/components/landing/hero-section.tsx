@@ -404,8 +404,8 @@ export function HeroSection() {
 
       <SiteHeader
         navigationItems={siteNavigationItems}
-        loginHref="#demonstracao"
-        primaryHref="#hero-cta"
+        loginHref="/login"
+        primaryHref="/criar-conta"
       />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1240px] items-center px-5 pb-16 pt-28 sm:px-6 md:pt-32 lg:px-8">
