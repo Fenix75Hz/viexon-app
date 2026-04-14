@@ -322,6 +322,9 @@ function FeatureBar() {
 function RotatingPhrase() {
   const shouldReduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
+  const longestPhrase = rotatingPhrases.reduce((longest, phrase) =>
+    phrase.length > longest.length ? phrase : longest,
+  );
 
   const advancePhrase = useEffectEvent(() => {
     startTransition(() => {
@@ -338,7 +341,13 @@ function RotatingPhrase() {
     <div className="relative mx-auto max-w-fit overflow-hidden rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] px-5 py-2 shadow-[0_18px_52px_var(--shadow-soft)] backdrop-blur-2xl transition-[background-color,border-color,box-shadow] duration-500">
       <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.08),transparent)] opacity-70" />
       <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-gradient-to-r from-transparent via-[var(--accent-primary)] to-transparent opacity-80" />
-      <div className="relative min-h-8 min-w-[20ch] overflow-hidden sm:min-h-10">
+      <div className="relative min-h-8 overflow-hidden sm:min-h-10">
+        <span
+          aria-hidden="true"
+          className="font-display invisible block whitespace-nowrap px-px text-[clamp(1.12rem,4vw,1.75rem)] font-semibold tracking-[-0.04em]"
+        >
+          {longestPhrase}
+        </span>
         <AnimatePresence mode="wait">
           <motion.p
             key={rotatingPhrases[activeIndex]}
