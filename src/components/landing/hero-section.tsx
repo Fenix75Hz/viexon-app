@@ -423,7 +423,7 @@ export function HeroSection() {
             <h1 className="font-display mt-8 text-balance text-[clamp(3.2rem,8vw,6.4rem)] font-semibold leading-[0.94] tracking-[-0.065em] text-[var(--text-primary)]">
               <span className="block">Viexon, agora,</span>
               <span className="block text-[var(--text-primary)]">sua operação inteira</span>
-              <span className="block bg-gradient-to-r from-[var(--text-primary)] via-[var(--accent-primary)] to-[var(--accent-secondary)] bg-clip-text text-transparent">
+              <span className="inline-block pb-[0.06em] bg-gradient-to-r from-[var(--text-primary)] via-[var(--accent-primary)] to-[var(--accent-secondary)] bg-clip-text text-transparent">
                 em um só lugar.
               </span>
             </h1>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { siteNavigationItems } from "@/components/site/navigation";
 import { SiteHeader } from "@/components/site/site-header";
@@ -574,14 +574,163 @@ function ResourceConstellation() {
   );
 }
 
+function BulletRow({
+  children,
+  tone = "primary",
+}: {
+  children: React.ReactNode;
+  tone?: "primary" | "secondary";
+}) {
+  return (
+    <li className="flex gap-3 text-sm leading-7 text-[var(--text-secondary)]">
+      <span
+        aria-hidden="true"
+        className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${
+          tone === "primary" ? "bg-[var(--accent-primary)]" : "bg-[var(--accent-secondary)]"
+        }`}
+      />
+      <span>{children}</span>
+    </li>
+  );
+}
+
+function ModulePreview({
+  moduleKey,
+}: {
+  moduleKey: ResourceKey;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+
+  const config = useMemo(() => {
+    switch (moduleKey) {
+      case "pedidos":
+        return {
+          label: "Ritmo comercial",
+          statA: { label: "Confirmados", value: "284" },
+          statB: { label: "Em andamento", value: "61" },
+          bars: [24, 32, 28, 38, 34, 44] as const,
+        };
+      case "estoque":
+        return {
+          label: "Disponibilidade",
+          statA: { label: "Sincronizado", value: "98,4%" },
+          statB: { label: "Reposição", value: "em dia" },
+          bars: [18, 24, 20, 26, 22, 30] as const,
+        };
+      case "clientes":
+        return {
+          label: "Carteira",
+          statA: { label: "Ativos", value: "1.240" },
+          statB: { label: "Prioridade", value: "19" },
+          bars: [20, 26, 22, 30, 28, 36] as const,
+        };
+      case "consignado":
+        return {
+          label: "Movimentação",
+          statA: { label: "Retornos", value: "42" },
+          statB: { label: "Ajustes", value: "7" },
+          bars: [14, 22, 18, 26, 20, 28] as const,
+        };
+      case "financeiro":
+        return {
+          label: "Fluxo",
+          statA: { label: "Caixa do dia", value: "R$ 48 mil" },
+          statB: { label: "Acertos", value: "98,4%" },
+          bars: [22, 30, 26, 34, 32, 40] as const,
+        };
+      case "relatorios":
+        return {
+          label: "Leitura executiva",
+          statA: { label: "Indicadores", value: "12" },
+          statB: { label: "Alertas", value: "3" },
+          bars: [16, 24, 20, 32, 26, 38] as const,
+        };
+      default:
+        return {
+          label: "Operação",
+          statA: { label: "Pendências", value: "14" },
+          statB: { label: "SLA", value: "alto" },
+          bars: [18, 26, 22, 30, 28, 34] as const,
+        };
+    }
+  }, [moduleKey]);
+
+  return (
+    <div className="rounded-[2rem] border border-[var(--border-soft)] bg-[var(--surface-strong)] p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--text-tertiary)]">
+            Preview
+          </p>
+          <p className="font-display mt-3 text-[1.35rem] tracking-[-0.05em] text-[var(--text-primary)]">
+            {config.label}
+          </p>
+        </div>
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-elevated)] text-[var(--accent-primary)] shadow-[0_16px_46px_var(--shadow-soft)]">
+          <ResourceGlyph moduleKey={moduleKey} />
+        </span>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-3">
+        {[config.statA, config.statB].map((stat) => (
+          <div
+            key={stat.label}
+            className="rounded-[1.4rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] px-4 py-3"
+          >
+            <p className="text-[0.68rem] uppercase tracking-[0.22em] text-[var(--text-tertiary)]">
+              {stat.label}
+            </p>
+            <p className="font-display mt-2 text-[1.05rem] tracking-[-0.04em] text-[var(--text-primary)]">
+              {stat.value}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 overflow-hidden rounded-[1.4rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] px-4 py-3">
+        <div className="flex items-end gap-2">
+          {config.bars.map((h, index) => (
+            <motion.span
+              key={`${moduleKey}-${index}`}
+              className="block w-full rounded-full bg-gradient-to-t from-[var(--accent-secondary)] to-[var(--accent-primary)] opacity-90"
+              style={{ height: `${h}px` }}
+              animate={
+                shouldReduceMotion
+                  ? undefined
+                  : { opacity: [0.72, 0.95, 0.78], y: [0, -1.5, 0] }
+              }
+              transition={
+                shouldReduceMotion
+                  ? undefined
+                  : {
+                      duration: 2.8 + index * 0.12,
+                      ease: "easeInOut",
+                      repeat: Number.POSITIVE_INFINITY,
+                      repeatType: "mirror",
+                    }
+              }
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ResourcesPage() {
   const shouldReduceMotion = useReducedMotion();
   const [activeKey, setActiveKey] = useState<ResourceKey>("pedidos");
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
 
   const activeModule = useMemo(
     () => resourceModules.find((item) => item.key === activeKey) ?? resourceModules[0],
     [activeKey],
   );
+
+  const selectModule = useCallback((nextKey: ResourceKey) => {
+    setActiveKey(nextKey);
+    setDetailsExpanded(false);
+  }, []);
 
   return (
     <main className="relative min-h-screen overflow-hidden text-[var(--text-primary)]">
@@ -718,7 +867,7 @@ export function ResourcesPage() {
                       <button
                         key={module.key}
                         type="button"
-                        onClick={() => setActiveKey(module.key)}
+                        onClick={() => selectModule(module.key)}
                         className={`group flex w-full cursor-pointer items-start gap-4 px-6 py-5 text-left transition-[background-color] duration-300 ${
                           isActive ? "bg-[var(--surface-strong)]" : "hover:bg-[var(--surface-elevated)]"
                         }`}
@@ -794,7 +943,7 @@ export function ResourcesPage() {
                       <h3 className="font-display mt-4 text-balance text-[2.2rem] leading-[1.02] tracking-[-0.06em] text-[var(--text-primary)] sm:text-[2.55rem]">
                         {activeModule.title}
                       </h3>
-                      <p className="mt-4 max-w-[46rem] text-base leading-7 text-[var(--text-secondary)]">
+                      <p className="mt-4 max-w-[46rem] text-base leading-7 text-[var(--text-secondary)] line-clamp-3">
                         {activeModule.summary}
                       </p>
                     </div>
@@ -805,7 +954,18 @@ export function ResourcesPage() {
                       >
                         Ver demonstração
                       </Link>
+                      <button
+                        type="button"
+                        onClick={() => setDetailsExpanded((value) => !value)}
+                        className="inline-flex items-center justify-center rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] px-4 py-3 text-sm font-semibold text-[var(--text-primary)] shadow-[0_14px_40px_var(--shadow-soft)] backdrop-blur-xl transition-[transform,border-color,background-color] duration-500 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface-soft)]"
+                      >
+                        {detailsExpanded ? "Ver menos" : "Ver detalhes"}
+                      </button>
                     </div>
+                  </div>
+
+                  <div className="mt-7">
+                    <ModulePreview moduleKey={activeModule.key} />
                   </div>
 
                   <div className="mt-8 grid gap-4 lg:grid-cols-2">
@@ -814,12 +974,13 @@ export function ResourcesPage() {
                         Valor do módulo
                       </p>
                       <ul className="mt-4 space-y-3">
-                        {activeModule.valuePoints.map((item) => (
-                          <li key={item} className="flex gap-3 text-sm leading-7 text-[var(--text-secondary)]">
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent-primary)]" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
+                        {(detailsExpanded ? activeModule.valuePoints : activeModule.valuePoints.slice(0, 2)).map(
+                          (item) => (
+                            <BulletRow key={item} tone="primary">
+                              {item}
+                            </BulletRow>
+                          ),
+                        )}
                       </ul>
                     </div>
 
@@ -828,18 +989,17 @@ export function ResourcesPage() {
                         Fit rápido
                       </p>
                       <ul className="mt-4 space-y-3">
-                        {activeModule.idealFor.map((item) => (
-                          <li key={item} className="flex gap-3 text-sm leading-7 text-[var(--text-secondary)]">
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent-secondary)]" />
-                            <span>{item}</span>
-                          </li>
+                        {(detailsExpanded ? activeModule.idealFor : activeModule.idealFor.slice(0, 2)).map((item) => (
+                          <BulletRow key={item} tone="secondary">
+                            {item}
+                          </BulletRow>
                         ))}
                       </ul>
                     </div>
                   </div>
 
                   <div className="mt-5 grid gap-4 md:grid-cols-3">
-                    {activeModule.capabilities.map((capability) => (
+                    {(detailsExpanded ? activeModule.capabilities : activeModule.capabilities.slice(0, 3)).map((capability) => (
                       <div
                         key={capability.title}
                         className="rounded-[1.9rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] p-5 shadow-[0_18px_60px_var(--shadow-soft)]"
@@ -847,7 +1007,7 @@ export function ResourcesPage() {
                         <p className="font-display text-[1.25rem] tracking-[-0.04em] text-[var(--text-primary)]">
                           {capability.title}
                         </p>
-                        <p className="mt-3 text-sm leading-7 text-[var(--text-secondary)]">
+                        <p className="mt-3 text-sm leading-7 text-[var(--text-secondary)] line-clamp-3">
                           {capability.description}
                         </p>
                       </div>
@@ -965,7 +1125,7 @@ export function ResourcesPage() {
                   <button
                     key={step.key}
                     type="button"
-                    onClick={() => setActiveKey(step.key as ResourceKey)}
+                    onClick={() => selectModule(step.key as ResourceKey)}
                     className="group cursor-pointer rounded-[1.9rem] border border-[var(--border-soft)] bg-[var(--surface-strong)] p-5 text-left transition-[transform,border-color] duration-500 hover:-translate-y-0.5 hover:border-[var(--border-strong)]"
                   >
                     <p className="text-[0.7rem] uppercase tracking-[0.24em] text-[var(--text-tertiary)]">
