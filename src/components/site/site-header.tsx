@@ -243,7 +243,7 @@ export function SiteHeader({
             </Link>
             <Link
               href={primaryHref}
-              className="inline-flex rounded-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_var(--accent-glow)] transition-[transform,box-shadow,filter] duration-500 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_var(--accent-glow)]"
+              className="hidden rounded-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_var(--accent-glow)] transition-[transform,box-shadow,filter] duration-500 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_var(--accent-glow)] sm:inline-flex"
             >
               Começar
             </Link>
