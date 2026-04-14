@@ -2,18 +2,10 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { startTransition, useEffect, useEffectEvent, useState, useSyncExternalStore } from "react";
+import { startTransition, useEffect, useEffectEvent, useState } from "react";
 
-import { ViexonLogo } from "./viexon-logo";
-
-type ThemeMode = "dark" | "light";
-
-const navigationItems = [
-  { href: "#solucao", label: "Solução" },
-  { href: "#modulos", label: "Módulos" },
-  { href: "#experiencia", label: "Experiência" },
-  { href: "#acesso", label: "Acesso" },
-];
+import { siteNavigationItems } from "@/components/site/navigation";
+import { SiteHeader } from "@/components/site/site-header";
 
 const rotatingPhrases = [
   "Muito mais sofisticada",
@@ -54,141 +46,6 @@ const heroPillars = [
 ];
 
 const heroEase = [0.16, 1, 0.3, 1] as const;
-const themeStorageKey = "viexon-theme";
-
-function applyTheme(theme: ThemeMode) {
-  const root = document.documentElement;
-  root.dataset.theme = theme;
-  root.style.colorScheme = theme;
-  window.localStorage.setItem(themeStorageKey, theme);
-}
-
-function useThemeMode() {
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-
-  const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof document !== "undefined") {
-      const currentTheme = document.documentElement.dataset.theme;
-
-      if (currentTheme === "dark" || currentTheme === "light") {
-        return currentTheme;
-      }
-    }
-
-    return "dark";
-  });
-
-  return {
-    mounted,
-    theme,
-    toggleTheme() {
-      const nextTheme = theme === "dark" ? "light" : "dark";
-
-      setTheme(nextTheme);
-      applyTheme(nextTheme);
-    },
-  };
-}
-
-function MoonIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className="h-[18px] w-[18px] fill-none stroke-current"
-    >
-      <path
-        d="M19 15.5A7.5 7.5 0 0 1 8.5 5a7.7 7.7 0 1 0 10.5 10.5Z"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function SunIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className="h-[18px] w-[18px] fill-none stroke-current"
-    >
-      <circle cx="12" cy="12" r="3.6" strokeWidth="1.7" />
-      <path
-        d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3 5.5 5.5"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function ThemeToggle({
-  mounted,
-  theme,
-  onToggle,
-}: {
-  mounted: boolean;
-  onToggle: () => void;
-  theme: ThemeMode;
-}) {
-  if (!mounted) {
-    return (
-      <div
-        aria-hidden="true"
-        className="h-11 w-[90px] rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] shadow-[0_16px_42px_var(--shadow-soft)]"
-      />
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      aria-label={`Ativar ${theme === "dark" ? "light mode" : "dark mode"}`}
-      aria-pressed={theme === "light"}
-      onClick={onToggle}
-      className="group relative flex h-11 w-[90px] items-center rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] p-1 text-[var(--text-secondary)] shadow-[0_16px_42px_var(--shadow-soft)] backdrop-blur-2xl transition-[border-color,box-shadow,transform] duration-500 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:shadow-[0_22px_56px_var(--shadow-strong)]"
-    >
-      <motion.span
-        initial={false}
-        animate={{ x: theme === "light" ? 39 : 0 }}
-        transition={{ duration: 0.42, ease: heroEase }}
-        className="absolute left-1 top-1 h-9 w-[41px] rounded-full border border-[var(--border-soft)] bg-[var(--surface-strong)] shadow-[0_12px_28px_var(--shadow-soft)]"
-      />
-      <span
-        className={`relative z-10 flex flex-1 items-center justify-center transition-colors duration-300 ${
-          theme === "dark" ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)]"
-        }`}
-      >
-        <MoonIcon />
-      </span>
-      <span
-        className={`relative z-10 flex flex-1 items-center justify-center transition-colors duration-300 ${
-          theme === "light" ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)]"
-        }`}
-      >
-        <SunIcon />
-      </span>
-    </button>
-  );
-}
-
-function NavLink({ href, label }: { href: string; label: string }) {
-  return (
-    <Link
-      href={href}
-      className="group relative inline-flex items-center px-1 py-1 text-sm font-medium text-[var(--text-secondary)] transition-colors duration-300 hover:text-[var(--text-primary)]"
-    >
-      <span>{label}</span>
-      <span className="pointer-events-none absolute inset-x-1 -bottom-1 h-px origin-left scale-x-0 bg-gradient-to-r from-[var(--accent-primary)] to-transparent transition-transform duration-500 group-hover:scale-x-100" />
-    </Link>
-  );
-}
 
 function PrimaryButton({ href, children }: { children: React.ReactNode; href: string }) {
   return (
@@ -538,8 +395,6 @@ function HeroOverview() {
 }
 
 export function HeroSection() {
-  const { mounted, theme, toggleTheme } = useThemeMode();
-
   return (
     <section
       id="solucao"
@@ -547,35 +402,11 @@ export function HeroSection() {
     >
       <HeroBackground />
 
-      <header className="absolute inset-x-0 top-0 z-20 px-4 pt-4 sm:px-6 lg:px-8">
-        <nav className="mx-auto flex w-full max-w-[1400px] items-center justify-between rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] px-4 py-3 shadow-[0_24px_80px_var(--shadow-soft)] backdrop-blur-2xl transition-[background-color,border-color,box-shadow,transform] duration-500 sm:px-5">
-          <Link aria-label="Viexon" href="/" className="shrink-0">
-            <ViexonLogo />
-          </Link>
-
-          <div className="hidden items-center gap-8 lg:flex">
-            {navigationItems.map((item) => (
-              <NavLink key={item.label} href={item.href} label={item.label} />
-            ))}
-          </div>
-
-          <div id="acesso" className="flex items-center gap-2.5 sm:gap-3">
-            <ThemeToggle mounted={mounted} theme={theme} onToggle={toggleTheme} />
-            <Link
-              href="#demonstracao"
-              className="hidden rounded-full border border-[var(--border-soft)] bg-[var(--nav-surface)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] shadow-[0_14px_38px_var(--shadow-soft)] backdrop-blur-xl transition-[background-color,border-color,box-shadow,transform] duration-500 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface-soft)] hover:shadow-[0_18px_54px_var(--shadow-strong)] sm:inline-flex"
-            >
-              Entrar
-            </Link>
-            <Link
-              href="#hero-cta"
-              className="inline-flex rounded-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_var(--accent-glow)] transition-[transform,box-shadow,filter] duration-500 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_var(--accent-glow)]"
-            >
-              Começar
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <SiteHeader
+        navigationItems={siteNavigationItems}
+        loginHref="#demonstracao"
+        primaryHref="#hero-cta"
+      />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1240px] items-center px-5 pb-16 pt-28 sm:px-6 md:pt-32 lg:px-8">
         <div className="w-full">
