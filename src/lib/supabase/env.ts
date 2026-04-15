@@ -46,7 +46,7 @@ export function getSupabaseEnvStatus() {
 
   return {
     ready: false,
-    message: "Preencha .env.local com NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+    message: "Configure NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY para continuar.",
   };
 }
 

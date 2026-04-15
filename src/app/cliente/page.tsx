@@ -30,7 +30,7 @@ export default async function ClientePage() {
   }
 
   if (!context.role || !context.onboarding_completed) {
-    redirect("/cadastro/completar");
+    redirect("/auth/redirecionar");
   }
 
   if (context.role !== "customer") {

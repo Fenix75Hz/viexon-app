@@ -6,17 +6,13 @@ import { useActionState, useDeferredValue, useEffect, useMemo, useState } from "
 import type { PublicResellerSearchResult, UserRole } from "@/types/database";
 
 import { initialAuthActionState } from "@/lib/auth/action-state";
-import {
-  completeOnboardingAction,
-  registerAction,
-} from "@/lib/auth/actions";
+import { registerAction } from "@/lib/auth/actions";
 
 import { Field, InlineMessage, PasswordField, SubmitButton } from "./form-primitives";
 
 type RegisterFormProps = {
   initialAccountType?: UserRole;
   initialMessage?: string | null;
-  mode: "complete" | "signup";
 };
 
 type SearchResponse = {
@@ -44,10 +40,8 @@ const roleOptions: Array<{
 export function RegisterForm({
   initialAccountType = "reseller",
   initialMessage,
-  mode,
 }: RegisterFormProps) {
-  const action = mode === "signup" ? registerAction : completeOnboardingAction;
-  const [state, formAction] = useActionState(action, initialAuthActionState);
+  const [state, formAction] = useActionState(registerAction, initialAuthActionState);
   const [accountType, setAccountType] = useState<UserRole>(initialAccountType);
   const [resellerQuery, setResellerQuery] = useState("");
   const [selectedReseller, setSelectedReseller] = useState<PublicResellerSearchResult | null>(null);
@@ -124,23 +118,15 @@ export function RegisterForm({
     };
   }, [accountType, deferredQuery, selectedReseller]);
 
-  const intro = useMemo(() => {
-    if (mode === "complete") {
-      return {
-        description:
-          "Sua conta ja existe. Finalize o perfil abaixo para liberar o acesso completo na plataforma.",
-        eyebrow: "Finalizar cadastro",
-        title: "Conclua o perfil com o vinculo certo.",
-      };
-    }
-
-    return {
+  const intro = useMemo(
+    () => ({
       description:
-        "Escolha o tipo de acesso, preencha os dados essenciais e conclua o onboarding conectado ao Supabase ja configurado no projeto.",
+        "Escolha o tipo de acesso, preencha os dados essenciais e conclua o cadastro em uma unica etapa.",
       eyebrow: "Criar conta",
       title: "Entre no Viexon com um fluxo claro e profissional.",
-    };
-  }, [mode]);
+    }),
+    [],
+  );
 
   function handleAccountTypeChange(nextType: UserRole) {
     setAccountType(nextType);
@@ -344,46 +330,39 @@ export function RegisterForm({
             </div>
           )}
 
-          {mode === "signup" ? (
-            <>
-              <Field
-                name="email"
-                type="email"
-                label="E-mail"
-                placeholder="voce@exemplo.com"
-                autoComplete="email"
-                error={state.fieldErrors.email}
-              />
+          <Field
+            name="email"
+            type="email"
+            label="E-mail"
+            placeholder="voce@exemplo.com"
+            autoComplete="email"
+            error={state.fieldErrors.email}
+          />
 
-              <PasswordField
-                name="password"
-                label="Senha"
-                placeholder="Crie uma senha segura"
-                autoComplete="new-password"
-                error={state.fieldErrors.password}
-              />
+          <PasswordField
+            name="password"
+            label="Senha"
+            placeholder="Crie uma senha segura"
+            autoComplete="new-password"
+            error={state.fieldErrors.password}
+          />
 
-              <div className="sm:col-span-2">
-                <PasswordField
-                  name="confirmPassword"
-                  label="Confirmar senha"
-                  placeholder="Repita sua senha"
-                  autoComplete="new-password"
-                  error={state.fieldErrors.confirmPassword}
-                />
-              </div>
-            </>
-          ) : null}
+          <div className="sm:col-span-2">
+            <PasswordField
+              name="confirmPassword"
+              label="Confirmar senha"
+              placeholder="Repita sua senha"
+              autoComplete="new-password"
+              error={state.fieldErrors.confirmPassword}
+            />
+          </div>
         </div>
       </div>
 
-      <SubmitButton
-        idleLabel={mode === "signup" ? "Criar conta" : "Concluir cadastro"}
-        pendingLabel={mode === "signup" ? "Criando conta..." : "Concluindo cadastro..."}
-      />
+      <SubmitButton idleLabel="Criar conta" pendingLabel="Criando conta..." />
 
       <p className="text-sm leading-7 text-[var(--text-secondary)]">
-        {mode === "signup" ? "Ja possui acesso?" : "Prefere entrar agora?"}{" "}
+        Ja possui acesso?{" "}
         <Link
           href="/login"
           className="font-semibold text-[var(--accent-primary)] transition-opacity duration-300 hover:opacity-80"

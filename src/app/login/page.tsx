@@ -45,7 +45,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const context = await getCurrentUserContext();
 
   if (context) {
-    redirect(context.role && context.onboarding_completed ? "/auth/redirecionar" : "/cadastro/completar");
+    redirect("/auth/redirecionar");
   }
 
   const { erro } = await searchParams;

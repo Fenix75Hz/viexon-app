@@ -10,12 +10,15 @@ function isMissingAuthSessionError(error: unknown) {
       : typeof error === "object" && error !== null && "message" in error && typeof error.message === "string"
         ? error.message
         : "";
+  const normalizedMessage = message.toLowerCase();
 
   if (error instanceof Error) {
     return (
       error.name === "AuthSessionMissingError" ||
-      message === "Auth session missing!" ||
-      message === "User from sub claim in JWT does not exist"
+      normalizedMessage.includes("auth session missing") ||
+      normalizedMessage.includes("sub claim in jwt") ||
+      normalizedMessage.includes("jwt expired") ||
+      normalizedMessage.includes("refresh token")
     );
   }
 
@@ -23,8 +26,10 @@ function isMissingAuthSessionError(error: unknown) {
     typeof error === "object" &&
     error !== null &&
     "message" in error &&
-    (message === "Auth session missing!" ||
-      message === "User from sub claim in JWT does not exist")
+    (normalizedMessage.includes("auth session missing") ||
+      normalizedMessage.includes("sub claim in jwt") ||
+      normalizedMessage.includes("jwt expired") ||
+      normalizedMessage.includes("refresh token"))
   );
 }
 

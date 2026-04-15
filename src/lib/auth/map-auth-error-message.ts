@@ -43,6 +43,10 @@ export function getFriendlyAuthErrorMessage(error: unknown) {
       return "Este cliente ja esta vinculado a outra revendedora.";
     case "AUTHENTICATION_REQUIRED":
       return "Sua sessao expirou. Entre novamente para continuar.";
+    case "PROFILE_NOT_FOUND":
+      return "Seu perfil ainda nao foi provisionado no banco. Tente novamente em instantes.";
+    case "ONBOARDING_METADATA_MISSING":
+      return "Os dados do seu perfil nao foram encontrados no cadastro. Saia e refaca a conta.";
     default:
       return message || "Nao foi possivel concluir a operacao agora. Tente novamente.";
   }

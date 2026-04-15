@@ -13,9 +13,11 @@ import { getConfiguredAppOrigin, getSupabaseEnvStatus } from "@/lib/supabase/env
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { UserRole } from "@/types/database";
 
-import { completeCustomerOnboarding } from "./complete-customer-onboarding";
-import { completeResellerOnboarding } from "./complete-reseller-onboarding";
 import { getFriendlyAuthErrorMessage } from "./map-auth-error-message";
+import {
+  buildPendingOnboardingMetadata,
+  completePendingOnboardingFromMetadata,
+} from "./pending-onboarding";
 
 type AccountType = UserRole;
 
@@ -36,10 +38,6 @@ type OnboardingValues = {
 };
 
 const AUTH_RATE_LIMITS = {
-  completeOnboardingByIp: {
-    limit: 8,
-    windowMs: 10 * 60 * 1000,
-  },
   loginByEmail: {
     limit: 5,
     windowMs: 10 * 60 * 1000,
@@ -147,10 +145,6 @@ function readOnboardingValues(formData: FormData): OnboardingValues {
     resellerPublicId: getStringValue(formData, "resellerPublicId"),
     storeName: getStringValue(formData, "storeName"),
   };
-}
-
-function redirectToCompletionWithMessage(message: string) {
-  redirect(`/cadastro/completar?erro=${encodeURIComponent(message)}`);
 }
 
 function getRequestOrigin(headerStore: Headers) {
@@ -311,13 +305,18 @@ export async function registerAction(
 
   const supabase = await createSupabaseServerClient();
   const origin = getRequestOrigin(headerStore);
+  const pendingOnboardingMetadata = buildPendingOnboardingMetadata({
+    accountType: values.accountType as AccountType,
+    fullName: values.fullName,
+    phone: values.phone,
+    resellerPublicId: values.resellerPublicId,
+    storeName: values.storeName,
+  });
   const { data, error } = await supabase.auth.signUp({
     email: values.email,
     password: values.password,
     options: {
-      data: {
-        full_name: values.fullName,
-      },
+      data: pendingOnboardingMetadata,
       emailRedirectTo: `${origin}/auth/confirm`,
     },
   });
@@ -342,96 +341,19 @@ export async function registerAction(
     return {
       fieldErrors: {},
       message:
-        "Conta criada. Confirme seu e-mail e depois entre para finalizar o acesso na plataforma.",
+        "Conta criada. Confirme seu e-mail para liberar o acesso automaticamente na plataforma.",
       status: "success",
     };
   }
 
   try {
-    if (values.accountType === "reseller") {
-      await completeResellerOnboarding(
-        {
-          fullName: values.fullName,
-          phone: values.phone,
-          storeName: values.storeName,
-        },
-        supabase,
-      );
-    } else {
-      await completeCustomerOnboarding(
-        {
-          fullName: values.fullName,
-          phone: values.phone,
-          resellerPublicId: values.resellerPublicId,
-        },
-        supabase,
-      );
-    }
-  } catch (error) {
-    redirectToCompletionWithMessage(getFriendlyAuthErrorMessage(error));
-  }
-
-  redirect("/auth/redirecionar");
-}
-
-export async function completeOnboardingAction(
-  _previousState: AuthActionState,
-  formData: FormData,
-): Promise<AuthActionState> {
-  const envStatus = getSupabaseEnvStatus();
-
-  if (!envStatus.ready) {
-    return {
-      fieldErrors: {},
-      message: envStatus.message,
-      status: "error",
-    };
-  }
-
-  const values = readOnboardingValues(formData);
-  const fieldErrors = validateOnboarding(values, false);
-
-  if (hasFieldErrors(fieldErrors)) {
-    return {
-      fieldErrors,
-      message: "Revise os campos destacados para concluir seu perfil.",
-      status: "error",
-    };
-  }
-
-  const headerStore = await headers();
-  const fingerprint = getClientFingerprint(headerStore);
-  const onboardingByIp = checkRateLimit({
-    identifier: fingerprint,
-    limit: AUTH_RATE_LIMITS.completeOnboardingByIp.limit,
-    scope: "auth:onboarding:ip",
-    windowMs: AUTH_RATE_LIMITS.completeOnboardingByIp.windowMs,
-  });
-
-  if (!onboardingByIp.allowed) {
-    return createRateLimitState(
-      `Voce atingiu o limite de tentativas de finalizacao. Aguarde ${formatRetryAfter(onboardingByIp.retryAfterMs)} e tente novamente.`,
-    );
-  }
-
-  try {
-    if (values.accountType === "reseller") {
-      await completeResellerOnboarding({
-        fullName: values.fullName,
-        phone: values.phone,
-        storeName: values.storeName,
-      });
-    } else {
-      await completeCustomerOnboarding({
-        fullName: values.fullName,
-        phone: values.phone,
-        resellerPublicId: values.resellerPublicId,
-      });
-    }
+    await completePendingOnboardingFromMetadata(pendingOnboardingMetadata, supabase);
   } catch (error) {
     return {
       fieldErrors: {},
-      message: getFriendlyAuthErrorMessage(error),
+      message:
+        `Conta criada, mas o perfil ainda nao foi liberado. ${getFriendlyAuthErrorMessage(error)} ` +
+        "Entre novamente em instantes para o sistema concluir automaticamente.",
       status: "error",
     };
   }

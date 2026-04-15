@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import type { EmailOtpType } from "@supabase/supabase-js";
 
+import { getFriendlyAuthErrorMessage } from "@/lib/auth/map-auth-error-message";
+import {
+  getPendingOnboardingFallbackMessage,
+  resolvePendingOnboarding,
+} from "@/lib/auth/pending-onboarding";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function buildRedirect(requestUrl: string, path: string, message?: string) {
@@ -23,6 +28,32 @@ export async function GET(request: Request) {
   const nextPath = next && next.startsWith("/") ? next : "/auth/redirecionar";
   const supabase = await createSupabaseServerClient();
 
+  async function finalizeRedirect() {
+    try {
+      const resolution = await resolvePendingOnboarding(supabase);
+
+      if (resolution.status === "signed-out" || resolution.status === "missing-metadata") {
+        return NextResponse.redirect(
+          buildRedirect(
+            request.url,
+            "/cadastro/completar",
+            getPendingOnboardingFallbackMessage(resolution.status),
+          ),
+        );
+      }
+
+      return NextResponse.redirect(buildRedirect(request.url, nextPath));
+    } catch (error) {
+      return NextResponse.redirect(
+        buildRedirect(
+          request.url,
+          "/cadastro/completar",
+          getFriendlyAuthErrorMessage(error),
+        ),
+      );
+    }
+  }
+
   if (errorDescription) {
     return NextResponse.redirect(
       buildRedirect(
@@ -37,7 +68,7 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      return NextResponse.redirect(buildRedirect(request.url, nextPath));
+      return finalizeRedirect();
     }
   }
 
@@ -48,7 +79,7 @@ export async function GET(request: Request) {
     });
 
     if (!error) {
-      return NextResponse.redirect(buildRedirect(request.url, nextPath));
+      return finalizeRedirect();
     }
   }
 

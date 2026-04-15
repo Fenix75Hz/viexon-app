@@ -101,7 +101,7 @@ export default async function RevendedoraPage() {
   }
 
   if (!context.role || !context.onboarding_completed) {
-    redirect("/cadastro/completar");
+    redirect("/auth/redirecionar");
   }
 
   if (context.role !== "reseller") {

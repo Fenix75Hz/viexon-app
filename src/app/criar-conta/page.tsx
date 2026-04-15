@@ -40,7 +40,7 @@ export default async function CriarContaPage() {
   const context = await getCurrentUserContext();
 
   if (context) {
-    redirect(context.role && context.onboarding_completed ? "/auth/redirecionar" : "/cadastro/completar");
+    redirect("/auth/redirecionar");
   }
 
   return (
@@ -56,7 +56,7 @@ export default async function CriarContaPage() {
         "Validacoes no formulario e no backend para evitar cadastro inconsistente ou sem contexto.",
       ]}
     >
-      <RegisterForm mode="signup" />
+      <RegisterForm />
     </AuthShell>
   );
 }
