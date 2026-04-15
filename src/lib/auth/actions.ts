@@ -9,7 +9,7 @@ import {
   formatRetryAfter,
   getClientFingerprint,
 } from "@/lib/security/rate-limit";
-import { getSupabaseEnvStatus } from "@/lib/supabase/env";
+import { getConfiguredAppOrigin, getSupabaseEnvStatus } from "@/lib/supabase/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { UserRole } from "@/types/database";
 
@@ -153,6 +153,30 @@ function redirectToCompletionWithMessage(message: string) {
   redirect(`/cadastro/completar?erro=${encodeURIComponent(message)}`);
 }
 
+function getRequestOrigin(headerStore: Headers) {
+  const configuredOrigin = getConfiguredAppOrigin();
+
+  if (configuredOrigin) {
+    return configuredOrigin;
+  }
+
+  const originHeader = headerStore.get("origin");
+
+  if (originHeader) {
+    return originHeader;
+  }
+
+  const host =
+    headerStore.get("x-forwarded-host") ??
+    headerStore.get("host") ??
+    "localhost:3000";
+  const protocol =
+    headerStore.get("x-forwarded-proto") ??
+    (host.includes("localhost") || host.startsWith("127.0.0.1") ? "http" : "https");
+
+  return `${protocol}://${host}`;
+}
+
 function createRateLimitState(message: string): AuthActionState {
   return {
     fieldErrors: {},
@@ -286,6 +310,7 @@ export async function registerAction(
   }
 
   const supabase = await createSupabaseServerClient();
+  const origin = getRequestOrigin(headerStore);
   const { data, error } = await supabase.auth.signUp({
     email: values.email,
     password: values.password,
@@ -293,6 +318,7 @@ export async function registerAction(
       data: {
         full_name: values.fullName,
       },
+      emailRedirectTo: `${origin}/auth/confirm`,
     },
   });
 
