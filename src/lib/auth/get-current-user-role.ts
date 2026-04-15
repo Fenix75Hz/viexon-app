@@ -4,9 +4,18 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CurrentUserContext, UserRole } from "@/types/database";
 
 function isMissingAuthSessionError(error: unknown) {
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === "object" && error !== null && "message" in error && typeof error.message === "string"
+        ? error.message
+        : "";
+
   if (error instanceof Error) {
     return (
-      error.name === "AuthSessionMissingError" || error.message === "Auth session missing!"
+      error.name === "AuthSessionMissingError" ||
+      message === "Auth session missing!" ||
+      message === "User from sub claim in JWT does not exist"
     );
   }
 
@@ -14,7 +23,8 @@ function isMissingAuthSessionError(error: unknown) {
     typeof error === "object" &&
     error !== null &&
     "message" in error &&
-    error.message === "Auth session missing!"
+    (message === "Auth session missing!" ||
+      message === "User from sub claim in JWT does not exist")
   );
 }
 
