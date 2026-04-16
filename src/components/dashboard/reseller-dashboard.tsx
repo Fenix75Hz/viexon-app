@@ -513,11 +513,11 @@ function Panel({
       }
       transition={{ duration: 0.3, ease: motionEase }}
       className={cn(
-        "relative overflow-hidden rounded-[30px] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(7,14,28,0.95),rgba(3,9,22,0.98))] shadow-[0_26px_74px_rgba(2,8,22,0.54)]",
+        "relative overflow-hidden rounded-[24px] border border-slate-800 bg-slate-900/80 shadow-sm",
         className,
       )}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(100,231,255,0.08),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(44,96,255,0.12),transparent_40%)]" />
+      
       <div className="relative">{children}</div>
     </motion.section>
   );
@@ -536,7 +536,7 @@ function SectionHeader({
     <div className="flex items-start justify-between gap-4">
       <div>
         {caption ? (
-          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-white/45">
+          <p className="text-[0.68rem] font-semibold uppercase tracking-wider text-white/45">
             {caption}
           </p>
         ) : null}
@@ -545,7 +545,7 @@ function SectionHeader({
         </h2>
       </div>
       {value ? (
-        <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[0.72rem] font-medium text-cyan-100">
+        <span className="rounded-full bg-slate-800 px-3 py-1 text-[0.75rem] font-medium text-slate-300 rounded-full">
           {value}
         </span>
       ) : null}
@@ -569,12 +569,12 @@ function MetricCard({
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/18 bg-cyan-400/12 text-cyan-200 shadow-[0_0_36px_rgba(100,231,255,0.16)]">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-700 bg-slate-800 text-slate-300">
               <DashboardIcon name={icon} />
             </span>
             <div>
               <p className="text-sm font-medium text-white/64">{label}</p>
-              <p className="mt-1 text-[0.72rem] uppercase tracking-[0.18em] text-cyan-100/70">
+              <p className="mt-1 text-[0.72rem] uppercase tracking-wider text-cyan-100/70">
                 {trendLabel}
               </p>
             </div>
@@ -583,7 +583,7 @@ function MetricCard({
             <p className="font-display text-[2.3rem] font-semibold tracking-[-0.06em] text-white">
               {value}
             </p>
-            <span className="mb-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-xs font-semibold text-emerald-200">
+            <span className="mb-2 rounded-full bg-emerald-500/10 text-emerald-400 px-2.5 py-1 text-xs font-medium rounded-full">
               {trendValue}
             </span>
           </div>
@@ -665,7 +665,7 @@ function RevenueChart() {
 
   return (
     <div className="mt-6">
-      <div className="relative overflow-hidden rounded-[28px] border border-white/8 bg-[#020916] px-4 py-5 sm:px-6">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/8 bg-[#0F172A] px-4 py-5 sm:px-6">
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(100,231,255,0.04),transparent_32%),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:100%_100%,calc(100%/6)_100%,100%_calc(100%/5)] opacity-70" />
         <svg viewBox="0 0 720 260" className="relative h-[260px] w-full" aria-hidden="true">
           <defs>
@@ -700,7 +700,7 @@ function RevenueChart() {
               { label: "Conversao", value: "62%" },
             ].map((item) => (
               <div key={item.label}>
-                <p className="text-[0.72rem] uppercase tracking-[0.18em] text-white/40">{item.label}</p>
+                <p className="text-[0.72rem] uppercase tracking-wider text-white/40">{item.label}</p>
                 <p className="mt-2 text-sm font-semibold text-white">{item.value}</p>
               </div>
             ))}
@@ -720,8 +720,8 @@ function RevenueChart() {
           { label: "Melhor dia de caixa", value: "R$ 9.280", detail: "29 Abr" },
           { label: "Media diaria", value: "R$ 6.156", detail: "ultimos 15 dias" },
         ].map((item) => (
-          <div key={item.label} className="rounded-[22px] border border-white/8 bg-white/[0.03] px-4 py-4">
-            <p className="text-[0.7rem] uppercase tracking-[0.18em] text-white/40">{item.label}</p>
+          <div key={item.label} className="rounded-[22px] border border-slate-800/60 bg-slate-800/40 px-4 py-4">
+            <p className="text-[0.7rem] uppercase tracking-wider text-white/40">{item.label}</p>
             <p className="mt-3 text-base font-semibold text-white">{item.value}</p>
             <p className="mt-2 text-sm text-white/48">{item.detail}</p>
           </div>
@@ -739,7 +739,7 @@ function RadarPanel() {
     <div className="space-y-5 p-5 sm:p-6">
       <SectionHeader caption="Mix comercial" title="Radar de vendas" value="Atualizado agora" />
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Pedidos por status</p>
         <div className="mt-4 space-y-3">
           {orderStatus.map((item) => (
@@ -759,7 +759,7 @@ function RadarPanel() {
         </div>
       </div>
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Pronta entrega x consignado</p>
         <div className="mt-4 h-3 overflow-hidden rounded-full bg-white/8">
           {salesMix.map((channel) => (
@@ -777,7 +777,7 @@ function RadarPanel() {
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {salesMix.map((channel) => (
-            <div key={channel.label} className="rounded-[20px] border border-white/8 bg-[#041021] px-4 py-4">
+            <div key={channel.label} className="rounded-[20px] border border-slate-800 bg-slate-900/60 px-4 py-4">
               <div className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: channel.color }} />
                 <p className="text-sm font-medium text-white/72">{channel.label}</p>
@@ -789,7 +789,7 @@ function RadarPanel() {
         </div>
       </div>
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Desempenho por categoria</p>
         <div className="mt-4 space-y-3">
           {categoryPerformance.map((item) => (
@@ -819,33 +819,33 @@ function ShortTermFinancePanel() {
     <div className="space-y-5 p-5 sm:p-6">
       <SectionHeader caption="Fluxo financeiro" title="Recebimentos previstos" value="4 proximos ciclos" />
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <div className="flex h-[180px] items-end gap-3">
           {weeklyReceipts.map((item) => (
             <div key={item.label} className="flex flex-1 flex-col items-center gap-3">
               <div className="flex h-full w-full items-end rounded-[18px] bg-white/6 p-2">
                 <div
-                  className="w-full rounded-[12px] bg-gradient-to-t from-blue-600 via-sky-500 to-cyan-300 shadow-[0_0_28px_rgba(100,231,255,0.22)]"
+                  className="w-full rounded-[12px] bg-gradient-to-t from-blue-600 via-sky-500 to-cyan-300 shadow-none"
                   style={{ height: `${(item.value / maxReceipt) * 100}%` }}
                 />
               </div>
               <div className="text-center">
                 <p className="text-sm font-medium text-white">{formatCurrency(item.value)}</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/40">{item.label}</p>
+                <p className="mt-1 text-xs uppercase tracking-wider text-white/40">{item.label}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Proximos recebimentos</p>
         <div className="mt-4 space-y-3">
           {upcomingReceipts.map((item) => (
-            <div key={`${item.label}-${item.amount}`} className="flex items-center justify-between gap-3 rounded-[18px] border border-white/8 bg-[#041021] px-4 py-3">
+            <div key={`${item.label}-${item.amount}`} className="flex items-center justify-between gap-3 rounded-[18px] border border-slate-800 bg-slate-900/60 px-4 py-3">
               <div>
                 <p className="text-sm font-medium text-white">{item.label}</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/40">{item.amount}</p>
+                <p className="mt-1 text-xs uppercase tracking-wider text-white/40">{item.amount}</p>
               </div>
               <span className="text-sm text-cyan-100">{item.status}</span>
             </div>
@@ -863,12 +863,12 @@ function ShortTermFinancePanel() {
 
 function AlertList({ items, title }: { items: string[]; title: string }) {
   return (
-    <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+    <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
       <p className="text-sm font-semibold text-white">{title}</p>
       <div className="mt-4 space-y-3">
         {items.map((item) => (
           <div key={item} className="flex gap-3 text-sm leading-6 text-white/56">
-            <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-cyan-300 shadow-[0_0_22px_rgba(100,231,255,0.34)]" />
+            <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-cyan-300 shadow-none" />
             <span>{item}</span>
           </div>
         ))}
@@ -885,7 +885,7 @@ function OperationPanel() {
       <div className="grid gap-4 xl:grid-cols-2">
         <ListBlock title="Pedidos pendentes" subtitle="Separacao, conferencia e envio">
           {pendingOrders.map((item) => (
-            <div key={item.id} className="rounded-[18px] border border-white/8 bg-[#041021] px-4 py-4">
+            <div key={item.id} className="rounded-[18px] border border-slate-800 bg-slate-900/60 px-4 py-4">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold text-white">
@@ -893,7 +893,7 @@ function OperationPanel() {
                   </p>
                   <p className="mt-1 text-sm text-white/48">{item.deadline}</p>
                 </div>
-                <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-100">
+                <span className="rounded-full bg-slate-800 text-slate-300 px-2.5 py-1 text-xs font-medium rounded-full">
                   {item.stage}
                 </span>
               </div>
@@ -921,18 +921,18 @@ function OperationPanel() {
         </ListBlock>
       </div>
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Ultimas movimentacoes</p>
         <div className="mt-5 space-y-4">
           {movementTimeline.map((item, index) => (
             <div key={item.title} className="flex gap-4">
               <div className="flex w-14 shrink-0 flex-col items-center">
-                <span className="text-xs font-medium uppercase tracking-[0.16em] text-white/34">{item.time}</span>
+                <span className="text-xs font-medium uppercase tracking-wider text-white/34">{item.time}</span>
                 {index < movementTimeline.length - 1 ? (
                   <span className="mt-3 h-full w-px bg-gradient-to-b from-cyan-300/60 to-transparent" />
                 ) : null}
               </div>
-              <div className="rounded-[18px] border border-white/8 bg-[#041021] px-4 py-4">
+              <div className="rounded-[18px] border border-slate-800 bg-slate-900/60 px-4 py-4">
                 <p className="text-sm font-semibold text-white">{item.title}</p>
                 <p className="mt-2 text-sm leading-6 text-white/54">{item.detail}</p>
               </div>
@@ -954,7 +954,7 @@ function ListBlock({
   title: string;
 }) {
   return (
-    <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+    <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
       <p className="text-sm font-semibold text-white">{title}</p>
       <p className="mt-2 text-sm leading-6 text-white/46">{subtitle}</p>
       <div className="mt-4 space-y-3">{children}</div>
@@ -971,10 +971,10 @@ function RiskRow({ item, tone }: { item: RiskItem; tone: "alert" | "neutral" | "
         : "bg-cyan-300";
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-[18px] border border-white/8 bg-[#041021] px-4 py-4">
+    <div className="flex items-center justify-between gap-3 rounded-[18px] border border-slate-800 bg-slate-900/60 px-4 py-4">
       <div className="min-w-0">
         <div className="flex items-center gap-3">
-          <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full shadow-[0_0_22px_rgba(100,231,255,0.3)]", toneClass)} />
+          <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full shadow-none", toneClass)} />
           <p className="truncate text-sm font-medium text-white">{item.label}</p>
         </div>
         <p className="mt-2 text-sm text-white/48">{item.status}</p>
@@ -995,15 +995,15 @@ function TopClientsPanel() {
         ))}
       </div>
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Leitura rapida</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {[
             { label: "Ticket da lider", value: "R$ 1.557" },
             { label: "Media carteira top 5", value: "R$ 9.256" },
           ].map((item) => (
-            <div key={item.label} className="rounded-[18px] border border-white/8 bg-[#041021] px-4 py-4">
-              <p className="text-[0.72rem] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
+            <div key={item.label} className="rounded-[18px] border border-slate-800 bg-slate-900/60 px-4 py-4">
+              <p className="text-[0.72rem] uppercase tracking-wider text-white/40">{item.label}</p>
               <p className="mt-3 text-base font-semibold text-white">{item.value}</p>
             </div>
           ))}
@@ -1015,7 +1015,7 @@ function TopClientsPanel() {
 
 function RankedBar({ item }: { item: RankedItem }) {
   return (
-    <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+    <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-semibold text-white">{item.label}</p>
@@ -1038,7 +1038,7 @@ function ProductsPanel() {
     <div className="space-y-5 p-5 sm:p-6">
       <SectionHeader caption="Produtos" title="Mais vendidos e estoque parado" value="Giro do mes" />
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Produtos mais vendidos</p>
         <div className="mt-4 space-y-4">
           {topProducts.map((item) => (
@@ -1047,7 +1047,7 @@ function ProductsPanel() {
         </div>
       </div>
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Produtos parados no estoque</p>
         <div className="mt-4 space-y-3">
           {stagnantProducts.map((item) => (
@@ -1064,8 +1064,8 @@ function InsightsPanel() {
     <div className="space-y-5 p-5 sm:p-6">
       <SectionHeader caption="Insights" title="Alertas e inteligencia comercial" value="4 sinais fortes" />
 
-      <div className="rounded-[24px] border border-cyan-400/14 bg-[linear-gradient(180deg,rgba(10,28,52,0.78),rgba(4,14,28,0.92))] p-4 shadow-[0_0_50px_rgba(60,130,255,0.12)]">
-        <p className="text-[0.72rem] uppercase tracking-[0.16em] text-cyan-100/64">Resumo executivo</p>
+      <div className="rounded-[24px] border border-slate-800 bg-slate-900/60 p-4 shadow-none">
+        <p className="text-[0.72rem] uppercase tracking-wider text-cyan-100/64">Resumo executivo</p>
         <p className="mt-4 font-display text-[1.6rem] font-semibold tracking-[-0.05em] text-white">
           Faturamento em alta com concentracao de risco no financeiro de curto prazo.
         </p>
@@ -1075,22 +1075,22 @@ function InsightsPanel() {
         </p>
       </div>
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Insights estrategicos</p>
         <div className="mt-4 space-y-3">
           {strategicInsights.map((item) => (
-            <div key={item} className="rounded-[18px] border border-white/8 bg-[#041021] px-4 py-4 text-sm leading-6 text-white/62">
+            <div key={item} className="rounded-[18px] border border-slate-800 bg-slate-900/60 px-4 py-4 text-sm leading-6 text-white/62">
               {item}
             </div>
           ))}
         </div>
       </div>
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+      <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
         <p className="text-sm font-semibold text-white">Ultimos pedidos realizados</p>
         <div className="mt-4 space-y-3">
           {recentOrders.map((order) => (
-            <div key={order.id} className="flex items-center justify-between gap-3 rounded-[18px] border border-white/8 bg-[#041021] px-4 py-3">
+            <div key={order.id} className="flex items-center justify-between gap-3 rounded-[18px] border border-slate-800 bg-slate-900/60 px-4 py-3">
               <div>
                 <p className="text-sm font-medium text-white">
                   {order.id} • {order.client}
@@ -1115,9 +1115,9 @@ export function ResellerDashboard({
   const quickSummary = `Voce tem ${pendingOrders.length} pedidos pendentes, ${consignedDue.length} acertos de consignado e ${todayVisits.length} clientes para visitar hoje.`;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#020816] text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(100,231,255,0.14),transparent_22%),radial-gradient(circle_at_88%_12%,rgba(60,130,255,0.18),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(27,54,120,0.24),transparent_38%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.16]" />
+    <main className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
+      
+      
 
       <motion.div
         initial={shouldReduceMotion ? false : "hidden"}
@@ -1128,19 +1128,19 @@ export function ResellerDashboard({
         <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]">
           <motion.aside
             variants={itemVariants}
-            className="hidden min-h-[calc(100svh-3rem)] flex-col rounded-[32px] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(6,13,28,0.94),rgba(3,8,20,0.98))] p-5 shadow-[0_28px_90px_rgba(2,8,22,0.56)] lg:flex lg:sticky lg:top-6"
+            className="hidden min-h-[calc(100svh-3rem)] flex-col rounded-[32px] border border-slate-800 bg-[linear-gradient(180deg,rgba(6,13,28,0.94),rgba(3,8,20,0.98))] p-5 shadow-[0_28px_90px_rgba(2,8,22,0.56)] lg:flex lg:sticky lg:top-6"
           >
             <div className="flex items-center justify-between gap-3">
               <Link href="/" aria-label="Viexon">
                 <ViexonLogo />
               </Link>
-              <span className="rounded-full border border-cyan-400/18 bg-cyan-400/8 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-cyan-100/82">
+              <span className="rounded-full border border-cyan-400/18 bg-slate-800 px-3 py-1 text-[0.65rem] font-medium text-slate-300">
                 Revendedora
               </span>
             </div>
 
-            <div className="mt-8 rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/38">
+            <div className="mt-8 rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
+              <p className="text-[0.68rem] font-semibold uppercase tracking-wider text-white/38">
                 Operacao atual
               </p>
               <p className="mt-3 font-display text-[1.45rem] font-semibold tracking-[-0.05em] text-white">
@@ -1157,7 +1157,7 @@ export function ResellerDashboard({
                   <Link
                     key={item.label}
                     href="/revendedora"
-                    className="group flex items-center justify-between rounded-[20px] border border-cyan-400/18 bg-cyan-400/12 px-4 py-3 text-sm font-medium text-white shadow-[0_0_38px_rgba(100,231,255,0.12)]"
+                    className="group flex items-center justify-between rounded-[20px] border border-cyan-400/18 bg-cyan-400/12 px-4 py-3 text-sm font-medium text-white shadow-none"
                   >
                     <span className="flex items-center gap-3">
                       <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-400/18 bg-[#091524] text-cyan-200">
@@ -1165,7 +1165,7 @@ export function ResellerDashboard({
                       </span>
                       {item.label}
                     </span>
-                    <span className="rounded-full bg-white/10 px-2.5 py-1 text-[0.65rem] uppercase tracking-[0.16em] text-cyan-100">
+                    <span className="rounded-full bg-white/10 px-2.5 py-1 text-[0.65rem] uppercase tracking-wider text-cyan-100">
                       Ativo
                     </span>
                   </Link>
@@ -1174,7 +1174,7 @@ export function ResellerDashboard({
                     key={item.label}
                     type="button"
                     disabled
-                    className="flex w-full items-center justify-between rounded-[20px] border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-white/56"
+                    className="flex w-full items-center justify-between rounded-[20px] border border-slate-800/60 bg-slate-800/40 px-4 py-3 text-sm text-white/56"
                   >
                     <span className="flex items-center gap-3">
                       <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/8 bg-[#09111f] text-white/48">
@@ -1182,7 +1182,7 @@ export function ResellerDashboard({
                       </span>
                       {item.label}
                     </span>
-                    <span className="text-[0.65rem] uppercase tracking-[0.16em] text-white/26">
+                    <span className="text-[0.65rem] uppercase tracking-wider text-white/26">
                       Em breve
                     </span>
                   </button>
@@ -1190,8 +1190,8 @@ export function ResellerDashboard({
               )}
             </nav>
 
-            <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/38">
+            <div className="rounded-[24px] border border-slate-800/60 bg-slate-800/40 p-4">
+              <p className="text-[0.68rem] font-semibold uppercase tracking-wider text-white/38">
                 Identificacao
               </p>
               <p className="mt-3 text-sm font-medium text-white">{identity.displayName}</p>
@@ -1220,7 +1220,7 @@ export function ResellerDashboard({
                     ].map((item) => (
                       <span
                         key={item}
-                        className="rounded-full border border-white/8 bg-white/[0.04] px-3 py-2 text-xs font-medium text-white/72"
+                        className="rounded-full border border-slate-800 bg-slate-900/50 px-3 py-2 text-xs font-medium text-white/72"
                       >
                         {item}
                       </span>
@@ -1238,20 +1238,20 @@ export function ResellerDashboard({
                         aria-label="Buscar no dashboard"
                         type="search"
                         placeholder="Buscar cliente, pedido, produto ou nota"
-                        className="h-12 w-full rounded-2xl border border-white/8 bg-white/[0.04] pl-12 pr-4 text-sm text-white outline-none transition-[border-color,background-color] duration-300 placeholder:text-white/28 focus:border-cyan-400/24 focus:bg-white/[0.06]"
+                        className="h-12 w-full rounded-2xl border border-slate-800 bg-slate-900/50 pl-12 pr-4 text-sm text-white outline-none transition-[border-color,background-color] duration-300 placeholder:text-white/28 focus:border-cyan-400/24 focus:bg-white/[0.06]"
                       />
                     </label>
 
                     <button
                       aria-label="Abrir notificacoes"
                       type="button"
-                      className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-white/8 bg-white/[0.04] text-white/72 transition-transform duration-300 hover:-translate-y-0.5"
+                      className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-800 bg-slate-900/50 text-white/72 transition-transform duration-300 hover:-translate-y-0.5"
                     >
                       <DashboardIcon name="bell" />
-                      <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(100,231,255,0.4)]" />
+                      <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-none" />
                     </button>
 
-                    <div className="flex h-12 min-w-[132px] items-center gap-3 rounded-2xl border border-white/8 bg-white/[0.04] px-3">
+                    <div className="flex h-12 min-w-[132px] items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/50 px-3">
                       <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 to-blue-600 text-sm font-semibold text-slate-950">
                         {identity.avatarInitials}
                       </span>
@@ -1262,8 +1262,8 @@ export function ResellerDashboard({
                     </div>
                   </div>
 
-                  <div className="rounded-[24px] border border-cyan-400/16 bg-[linear-gradient(90deg,rgba(7,26,48,0.9),rgba(8,16,36,0.7))] px-4 py-4">
-                    <p className="text-[0.72rem] uppercase tracking-[0.16em] text-cyan-100/56">Resumo do dia</p>
+                  <div className="rounded-[24px] border border-slate-800 bg-slate-800/40 px-4 py-4">
+                    <p className="text-[0.72rem] uppercase tracking-wider text-cyan-100/56">Resumo do dia</p>
                     <p className="mt-3 text-sm leading-6 text-white/70">{quickSummary}</p>
                   </div>
                 </div>
