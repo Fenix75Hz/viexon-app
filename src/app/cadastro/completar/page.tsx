@@ -15,7 +15,7 @@ import { getSupabaseEnvStatus } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
   title: "Viexon | Recuperar cadastro",
-  description: "Pagina de contingencia para cadastros que nao puderam ser finalizados automaticamente.",
+  description: "Pagina de contingencia para acessos que ainda nao foram provisionados corretamente.",
 };
 
 export const dynamic = "force-dynamic";
@@ -36,13 +36,13 @@ export default async function CompleteRegistrationPage({
       <AuthShell
         badge="Recuperacao"
         title="O ambiente precisa estar consistente para validar o acesso."
-        description="Esta tela agora existe apenas como contingencia. O cadastro principal ja deve liberar o perfil sem uma segunda etapa manual."
+        description="Esta tela existe apenas como contingencia. O app cria clientes; perfis de revendedora passam a ser provisionados manualmente."
         sideLabel="Fluxo protegido"
-        sideTitle="Quando algo sair do trilho, a recuperacao precisa ser objetiva."
+        sideTitle="Quando algo sair do trilho, a recuperacao precisa apontar a causa certa."
         highlights={[
-          "O cadastro principal concentra todos os dados do perfil em uma unica etapa.",
-          "A confirmacao de e-mail deve concluir o acesso automaticamente.",
-          "Esta tela so aparece quando o callback nao consegue finalizar o perfil.",
+          "Clientes devem concluir o acesso automaticamente.",
+          "Revendedoras nao passam mais por onboarding no app.",
+          "Esta tela so aparece quando o acesso nao foi provisionado corretamente.",
         ]}
       >
         <AuthUnavailableState message={envStatus.message} />
@@ -79,13 +79,13 @@ export default async function CompleteRegistrationPage({
     <AuthShell
       badge="Recuperacao"
       title="O perfil nao foi liberado automaticamente."
-      description="O fluxo principal agora conclui o perfil direto no cadastro. Se voce chegou aqui, houve uma inconsistência no callback ou nos dados salvos no Auth."
+      description="Se voce chegou aqui, o acesso autenticou, mas o banco ainda nao tem estrutura suficiente para liberar a area correta."
       sideLabel="Ajuste seguro"
-      sideTitle="Nada de segunda ficha manual. Aqui existe apenas uma saida limpa para recuperar o acesso."
+      sideTitle="Nada de ficha complementar no app. O problema agora e provisionamento."
       highlights={[
-        "O formulario de cadastro ja envia os dados completos do perfil.",
-        "A confirmacao por e-mail deveria levar direto ao ambiente correto.",
-        "Se houve erro, encerre a sessao e tente entrar de novo antes de refazer o cadastro.",
+        "Clientes devem sair daqui apenas quando faltou vinculo ou contexto no banco.",
+        "Revendedoras precisam ter perfil e loja provisionados manualmente no Supabase.",
+        "Se houve erro, limpe a sessao e tente entrar de novo depois de revisar o banco.",
       ]}
     >
       <div className="space-y-6">
@@ -97,8 +97,9 @@ export default async function CompleteRegistrationPage({
             O Viexon nao vai pedir seu perfil duas vezes.
           </h2>
           <p className="mt-3 max-w-[34rem] text-sm leading-7 text-[var(--text-secondary)] sm:text-base">
-            Esta area deixou de ser uma etapa de preenchimento. Ela so informa que o cadastro atual
-            ficou inconsistente e precisa ser retomado com a sessao limpa.
+            Esta area deixou de ser uma etapa de preenchimento. Ela apenas indica que o acesso
+            autenticou, mas o provisionamento ainda nao permite enviar voce para cliente ou
+            revendedora.
           </p>
         </div>
 
@@ -112,9 +113,9 @@ export default async function CompleteRegistrationPage({
             Encerre a sessao atual e tente entrar novamente.
           </p>
           <p className="mt-3 text-sm leading-7 text-[var(--text-secondary)]">
-            Isso limpa a sessao atual, evita loops de redirect e permite que o login conclua o
-            perfil automaticamente se o banco e o callback ja estiverem consistentes. Se o link de
-            confirmacao expirou, refaca o cadastro para gerar um novo envio.
+            Isso limpa a sessao atual e evita loops de redirect. Se for cliente, confirme se a
+            revendedora selecionada existe e esta ativa. Se for revendedora, provisiona o perfil no
+            Supabase antes de tentar entrar de novo.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">

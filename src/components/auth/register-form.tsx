@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useActionState, useDeferredValue, useEffect, useState } from "react";
 
 import type { PublicResellerSearchResult, UserRole } from "@/types/database";
 
@@ -20,29 +20,12 @@ type SearchResponse = {
   results?: PublicResellerSearchResult[];
 };
 
-const roleOptions: Array<{
-  description: string;
-  title: string;
-  value: UserRole;
-}> = [
-  {
-    description: "Gerencie pedidos, estoque, clientes e financeiro com um acesso principal.",
-    title: "Criar conta como revendedora",
-    value: "reseller",
-  },
-  {
-    description: "Acesse seu catalogo e mantenha o vinculo correto com sua revendedora.",
-    title: "Criar conta como cliente",
-    value: "customer",
-  },
-];
-
 export function RegisterForm({
-  initialAccountType = "reseller",
+  initialAccountType = "customer",
   initialMessage,
 }: RegisterFormProps) {
   const [state, formAction] = useActionState(registerAction, initialAuthActionState);
-  const [accountType, setAccountType] = useState<UserRole>(initialAccountType);
+  const [accountType] = useState<UserRole>(initialAccountType);
   const [resellerQuery, setResellerQuery] = useState("");
   const [selectedReseller, setSelectedReseller] = useState<PublicResellerSearchResult | null>(null);
   const [results, setResults] = useState<PublicResellerSearchResult[]>([]);
@@ -118,24 +101,6 @@ export function RegisterForm({
     };
   }, [accountType, deferredQuery, selectedReseller]);
 
-  const intro = useMemo(
-    () => ({
-      description:
-        "Escolha o tipo de acesso, preencha os dados essenciais e conclua o cadastro em uma unica etapa.",
-      eyebrow: "Criar conta",
-      title: "Entre no Viexon com um fluxo claro e profissional.",
-    }),
-    [],
-  );
-
-  function handleAccountTypeChange(nextType: UserRole) {
-    setAccountType(nextType);
-    setSearchError(null);
-    setResults([]);
-    setSelectedReseller(null);
-    setResellerQuery("");
-  }
-
   function handleResellerInputChange(value: string) {
     setResellerQuery(value);
 
@@ -154,7 +119,6 @@ export function RegisterForm({
     setSearchError(null);
   }
 
-  const activeRole = roleOptions.find((option) => option.value === accountType) ?? roleOptions[0];
   const message = state.message ?? initialMessage ?? null;
 
   return (
@@ -164,13 +128,14 @@ export function RegisterForm({
 
       <div>
         <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[var(--text-tertiary)]">
-          {intro.eyebrow}
+          Criar conta
         </p>
         <h2 className="font-display mt-3 text-[2rem] font-semibold tracking-[-0.05em] text-[var(--text-primary)] sm:text-[2.35rem]">
-          {intro.title}
+          Cliente entra pelo app. Revendedora entra por liberacao manual.
         </h2>
         <p className="mt-3 max-w-[34rem] text-sm leading-7 text-[var(--text-secondary)] sm:text-base">
-          {intro.description}
+          O cadastro publico agora atende apenas clientes. A revendedora sera criada por voce no
+          Supabase e depois podera entrar direto com e-mail e senha.
         </p>
       </div>
 
@@ -178,50 +143,22 @@ export function RegisterForm({
         <InlineMessage message={message} tone={state.status === "success" ? "success" : "error"} />
       ) : null}
 
-      <div className="grid gap-3 md:grid-cols-2">
-        {roleOptions.map((option) => {
-          const isActive = option.value === accountType;
-
-          return (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => handleAccountTypeChange(option.value)}
-              className={`rounded-[26px] border px-5 py-5 text-left transition-[border-color,background-color,box-shadow,transform] duration-300 ${
-                isActive
-                  ? "border-[var(--border-strong)] bg-[var(--surface-soft)] shadow-[0_18px_52px_var(--shadow-soft)]"
-                  : "border-[var(--border-soft)] bg-[var(--surface-panel)] hover:-translate-y-0.5 hover:border-[var(--border-strong)]"
-              }`}
-            >
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-tertiary)]">
-                {option.value === "reseller" ? "Revendedora" : "Cliente"}
-              </span>
-              <strong className="font-display mt-3 block text-[1.2rem] leading-[1.05] tracking-[-0.04em] text-[var(--text-primary)]">
-                {option.title}
-              </strong>
-              <span className="mt-3 block text-sm leading-7 text-[var(--text-secondary)]">
-                {option.description}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {state.fieldErrors.accountType ? (
-        <p className="text-sm text-rose-300">{state.fieldErrors.accountType}</p>
-      ) : null}
-
       <div className="rounded-[28px] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-5 sm:p-6">
         <div className="mb-6">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--text-tertiary)]">
-            Perfil selecionado
+            Acesso disponivel no app
           </p>
           <p className="font-display mt-2 text-[1.5rem] font-semibold tracking-[-0.04em] text-[var(--text-primary)]">
-            {activeRole.value === "reseller" ? "Fluxo de revendedora" : "Fluxo de cliente"}
+            Fluxo de cliente
           </p>
           <p className="mt-2 text-sm leading-7 text-[var(--text-secondary)]">
-            {activeRole.description}
+            Escolha sua revendedora, crie a senha e conclua o acesso no mesmo fluxo.
           </p>
+        </div>
+
+        <div className="mb-6 rounded-[22px] border border-[var(--border-soft)] bg-[var(--surface-strong)] px-4 py-4 text-sm leading-7 text-[var(--text-secondary)]">
+          Revendedoras nao se cadastram mais por esta tela. Esse perfil agora e provisionado
+          manualmente no Supabase.
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
@@ -241,94 +178,88 @@ export function RegisterForm({
             error={state.fieldErrors.phone}
           />
 
-          {accountType === "reseller" ? (
-            <Field
-              name="storeName"
-              label="Nome da loja ou nome comercial"
-              placeholder="Nome da sua loja"
-              autoComplete="organization"
-              error={state.fieldErrors.storeName}
-            />
-          ) : (
-            <div className="sm:col-span-2">
-              <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                  Buscar revendedora
-                </span>
-                <input
-                  value={resellerQuery}
-                  onChange={(event) => handleResellerInputChange(event.target.value)}
-                  placeholder="Pesquise pelo nome da revendedora"
-                  aria-invalid={Boolean(state.fieldErrors.resellerPublicId)}
-                  aria-describedby={
-                    state.fieldErrors.resellerPublicId ? "resellerPublicId-error" : undefined
-                  }
-                  className="w-full rounded-[22px] border border-[var(--border-soft)] bg-[var(--surface-strong)] px-4 py-3.5 text-sm text-[var(--text-primary)] outline-none transition-[border-color,box-shadow,background-color] duration-300 placeholder:text-[var(--text-tertiary)] focus:border-[var(--border-strong)] focus:bg-[var(--surface-elevated)] focus:shadow-[0_0_0_4px_rgba(100,231,255,0.08)]"
-                />
-              </label>
+          <div className="sm:col-span-2">
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
+                Buscar revendedora
+              </span>
+              <input
+                value={resellerQuery}
+                onChange={(event) => handleResellerInputChange(event.target.value)}
+                placeholder="Pesquise pelo nome da revendedora"
+                aria-invalid={Boolean(state.fieldErrors.resellerPublicId)}
+                aria-describedby={
+                  state.fieldErrors.resellerPublicId ? "resellerPublicId-error" : undefined
+                }
+                className="w-full rounded-[22px] border border-[var(--border-soft)] bg-[var(--surface-strong)] px-4 py-3.5 text-sm text-[var(--text-primary)] outline-none transition-[border-color,box-shadow,background-color] duration-300 placeholder:text-[var(--text-tertiary)] focus:border-[var(--border-strong)] focus:bg-[var(--surface-elevated)] focus:shadow-[0_0_0_4px_rgba(100,231,255,0.08)]"
+              />
+            </label>
 
-              <div className="mt-3 space-y-3">
-                {selectedReseller ? (
-                  <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-[var(--border-strong)] bg-[var(--surface-soft)] px-4 py-3 text-sm text-[var(--text-primary)]">
-                    <span className="font-medium">{selectedReseller.public_name}</span>
-                    <span className="text-[var(--text-tertiary)]">/{selectedReseller.slug}</span>
+            <div className="mt-3 space-y-3">
+              {selectedReseller ? (
+                <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-[var(--border-strong)] bg-[var(--surface-soft)] px-4 py-3 text-sm text-[var(--text-primary)]">
+                  <span className="font-medium">{selectedReseller.public_name}</span>
+                  <span className="text-[var(--text-tertiary)]">/{selectedReseller.slug}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedReseller(null);
+                      setResellerQuery("");
+                    }}
+                    className="ml-auto text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-primary)]"
+                  >
+                    Trocar
+                  </button>
+                </div>
+              ) : null}
+
+              {isSearching ? (
+                <p className="text-sm text-[var(--text-secondary)]">Buscando revendedoras...</p>
+              ) : null}
+
+              {!selectedReseller && results.length > 0 ? (
+                <div className="space-y-2">
+                  {results.map((result) => (
                     <button
+                      key={result.public_id}
                       type="button"
-                      onClick={() => {
-                        setSelectedReseller(null);
-                        setResellerQuery("");
-                      }}
-                      className="ml-auto text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-primary)]"
+                      onClick={() => handleResellerSelect(result)}
+                      className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-[var(--border-soft)] bg-[var(--surface-strong)] px-4 py-3 text-left transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface-elevated)]"
                     >
-                      Trocar
+                      <span>
+                        <span className="block text-sm font-medium text-[var(--text-primary)]">
+                          {result.public_name}
+                        </span>
+                        <span className="mt-1 block text-xs uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+                          {result.slug}
+                        </span>
+                      </span>
+                      <span className="rounded-full border border-[var(--border-soft)] px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+                        {result.status}
+                      </span>
                     </button>
-                  </div>
-                ) : null}
+                  ))}
+                </div>
+              ) : null}
 
-                {isSearching ? (
-                  <p className="text-sm text-[var(--text-secondary)]">Buscando revendedoras...</p>
-                ) : null}
+              {!selectedReseller &&
+              !isSearching &&
+              deferredQuery.length >= 2 &&
+              results.length === 0 &&
+              !searchError ? (
+                <p className="text-sm text-[var(--text-secondary)]">
+                  Nenhuma revendedora encontrada com esse nome.
+                </p>
+              ) : null}
 
-                {!selectedReseller && results.length > 0 ? (
-                  <div className="space-y-2">
-                    {results.map((result) => (
-                      <button
-                        key={result.public_id}
-                        type="button"
-                        onClick={() => handleResellerSelect(result)}
-                        className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-[var(--border-soft)] bg-[var(--surface-strong)] px-4 py-3 text-left transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface-elevated)]"
-                      >
-                        <span>
-                          <span className="block text-sm font-medium text-[var(--text-primary)]">
-                            {result.public_name}
-                          </span>
-                          <span className="mt-1 block text-xs uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
-                            {result.slug}
-                          </span>
-                        </span>
-                        <span className="rounded-full border border-[var(--border-soft)] px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
-                          {result.status}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                ) : null}
-
-                {!selectedReseller && !isSearching && deferredQuery.length >= 2 && results.length === 0 && !searchError ? (
-                  <p className="text-sm text-[var(--text-secondary)]">
-                    Nenhuma revendedora encontrada com esse nome.
-                  </p>
-                ) : null}
-
-                {searchError ? <p className="text-sm text-rose-300">{searchError}</p> : null}
-                {state.fieldErrors.resellerPublicId ? (
-                  <p id="resellerPublicId-error" className="text-sm text-rose-300">
-                    {state.fieldErrors.resellerPublicId}
-                  </p>
-                ) : null}
-              </div>
+              {searchError ? <p className="text-sm text-rose-300">{searchError}</p> : null}
+              {state.fieldErrors.resellerPublicId ? (
+                <p id="resellerPublicId-error" className="text-sm text-rose-300">
+                  {state.fieldErrors.resellerPublicId}
+                </p>
+              ) : null}
             </div>
-          )}
+          </div>
 
           <Field
             name="email"
@@ -362,7 +293,7 @@ export function RegisterForm({
       <SubmitButton idleLabel="Criar conta" pendingLabel="Criando conta..." />
 
       <p className="text-sm leading-7 text-[var(--text-secondary)]">
-        Ja possui acesso?{" "}
+        Revendedora ja provisionada ou cliente com acesso?{" "}
         <Link
           href="/login"
           className="font-semibold text-[var(--accent-primary)] transition-opacity duration-300 hover:opacity-80"

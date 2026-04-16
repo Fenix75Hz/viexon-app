@@ -4,7 +4,6 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CurrentUserContext, Database, UserRole } from "@/types/database";
 
 import { completeCustomerOnboarding } from "./complete-customer-onboarding";
-import { completeResellerOnboarding } from "./complete-reseller-onboarding";
 import {
   getLatestUserMetadata,
   getUserContextByProfileId,
@@ -33,7 +32,7 @@ export type PendingOnboardingResolution =
       context: CurrentUserContext;
     }
   | {
-      status: "missing-metadata" | "signed-out";
+      status: "manual-provisioning" | "missing-metadata" | "signed-out";
     };
 
 function getOptionalString(value: unknown) {
@@ -84,10 +83,6 @@ export function readPendingOnboardingMetadata(rawMetadata: unknown): PendingOnbo
     return null;
   }
 
-  if (accountType === "reseller" && !storeName) {
-    return null;
-  }
-
   if (accountType === "customer" && !resellerPublicId) {
     return null;
   }
@@ -108,14 +103,7 @@ export async function completePendingOnboardingFromMetadata(
   const supabase = supabaseClient ?? (await createSupabaseServerClient());
 
   if (metadata.account_type === "reseller") {
-    return completeResellerOnboarding(
-      {
-        fullName: metadata.full_name,
-        phone: metadata.phone,
-        storeName: metadata.store_name ?? "",
-      },
-      supabase,
-    );
+    throw new Error("RESELLER_SIGNUP_DISABLED");
   }
 
   return completeCustomerOnboarding(
@@ -184,6 +172,10 @@ export async function resolvePendingOnboarding(
     return { status: "missing-metadata" };
   }
 
+  if (metadata.account_type === "reseller") {
+    return { status: "manual-provisioning" };
+  }
+
   return {
     status: "completed",
     context: await completePendingOnboardingFromMetadata(metadata, supabase),
@@ -192,8 +184,10 @@ export async function resolvePendingOnboarding(
 
 export function getPendingOnboardingFallbackMessage(status: PendingOnboardingResolution["status"]) {
   switch (status) {
+    case "manual-provisioning":
+      return "Cadastro de revendedora nao e mais concluido pelo app. Provisione o perfil manualmente no Supabase e depois entre novamente.";
     case "missing-metadata":
-      return "Seu cadastro ficou sem os dados do perfil. Saia da conta e refaca o cadastro.";
+      return "Seu acesso ainda nao tem provisionamento suficiente no banco. Se for revendedora, finalize manualmente no Supabase.";
     case "signed-out":
       return "Sua sessao expirou. Entre novamente para continuar.";
     default:

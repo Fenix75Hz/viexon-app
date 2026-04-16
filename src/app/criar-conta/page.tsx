@@ -10,7 +10,7 @@ import { getSupabaseEnvStatus } from "@/lib/supabase/env";
 export const metadata: Metadata = {
   title: "Viexon | Criar conta",
   description:
-    "Crie sua conta no Viexon como revendedora ou cliente com onboarding conectado ao Supabase.",
+    "Crie sua conta de cliente no Viexon com vinculacao direta a uma revendedora existente.",
 };
 
 export const dynamic = "force-dynamic";
@@ -22,14 +22,14 @@ export default async function CriarContaPage() {
     return (
       <AuthShell
         badge="Cadastro"
-        title="Crie seu acesso com o tipo certo desde o primeiro passo."
-        description="O cadastro ja conversa com a estrutura existente do Supabase. Revendedoras concluem o proprio perfil. Clientes so avancam depois de selecionar a revendedora correta."
-        sideLabel="Onboarding conectado"
-        sideTitle="Uma entrada premium, clara e alinhada com a arquitetura que ja existe."
+        title="O cadastro publico agora atende apenas clientes."
+        description="A revendedora passa a ser provisionada manualmente no Supabase. Aqui o app cria apenas acessos de clientes vinculados a uma revendedora ativa."
+        sideLabel="Fluxo simplificado"
+        sideTitle="Menos variacao no cadastro, menos margem para inconsistencias no login."
         highlights={[
-          "Fluxo dedicado para revendedora, incluindo perfil comercial e nome da loja.",
-          "Fluxo dedicado para cliente, com busca de revendedora e vinculacao obrigatoria.",
-          "Validacoes no formulario e no backend para evitar cadastro inconsistente ou sem contexto.",
+          "Somente clientes podem criar conta por esta tela.",
+          "Revendedoras passam a ser liberadas manualmente no Supabase.",
+          "O cliente so conclui o cadastro depois de selecionar a revendedora correta.",
         ]}
       >
         <AuthUnavailableState message={envStatus.message} />
@@ -46,14 +46,14 @@ export default async function CriarContaPage() {
   return (
     <AuthShell
       badge="Cadastro"
-      title="Crie seu acesso com o tipo certo desde o primeiro passo."
-      description="O cadastro ja conversa com a estrutura existente do Supabase. Revendedoras concluem o proprio perfil. Clientes so avancam depois de selecionar a revendedora correta."
-      sideLabel="Onboarding conectado"
-      sideTitle="Uma entrada premium, clara e alinhada com a arquitetura que ja existe."
+      title="O cadastro publico agora atende apenas clientes."
+      description="A revendedora passa a ser provisionada manualmente no Supabase. Aqui o app cria apenas acessos de clientes vinculados a uma revendedora ativa."
+      sideLabel="Fluxo simplificado"
+      sideTitle="Menos variacao no cadastro, menos margem para inconsistencias no login."
       highlights={[
-        "Fluxo dedicado para revendedora, incluindo perfil comercial e nome da loja.",
-        "Fluxo dedicado para cliente, com busca de revendedora e vinculacao obrigatoria.",
-        "Validacoes no formulario e no backend para evitar cadastro inconsistente ou sem contexto.",
+        "Somente clientes podem criar conta por esta tela.",
+        "Revendedoras passam a ser liberadas manualmente no Supabase.",
+        "O cliente so conclui o cadastro depois de selecionar a revendedora correta.",
       ]}
     >
       <RegisterForm />

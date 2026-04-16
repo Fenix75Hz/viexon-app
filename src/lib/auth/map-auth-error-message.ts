@@ -38,6 +38,8 @@ export function getFriendlyAuthErrorMessage(error: unknown) {
       return "Informe seu nome completo para continuar.";
     case "STORE_NAME_REQUIRED":
       return "Informe o nome da loja para concluir o cadastro.";
+    case "RESELLER_SIGNUP_DISABLED":
+      return "Cadastro de revendedora nao e mais feito pelo aplicativo. Esse acesso precisa ser criado manualmente no Supabase.";
     case "SLUG_ALREADY_IN_USE":
       return "O identificador publico da revendedora ja esta em uso.";
     case "RESELLER_REQUIRED":

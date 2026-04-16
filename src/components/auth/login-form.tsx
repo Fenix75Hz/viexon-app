@@ -23,7 +23,7 @@ export function LoginForm({ initialMessage }: { initialMessage?: string | null }
         </h2>
         <p className="mt-3 max-w-[32rem] text-sm leading-7 text-[var(--text-secondary)] sm:text-base">
           Use seu acesso principal. O sistema identifica automaticamente seu perfil e encaminha
-          voce para a area correta.
+          voce para a area correta. Revendedoras entram com contas provisionadas manualmente.
         </p>
       </div>
 

@@ -32,7 +32,11 @@ export async function GET(request: Request) {
     try {
       const resolution = await resolvePendingOnboarding(supabase);
 
-      if (resolution.status === "signed-out" || resolution.status === "missing-metadata") {
+      if (
+        resolution.status === "signed-out" ||
+        resolution.status === "missing-metadata" ||
+        resolution.status === "manual-provisioning"
+      ) {
         return NextResponse.redirect(
           buildRedirect(
             request.url,

@@ -86,8 +86,9 @@ function validateLogin(values: LoginValues): AuthFieldErrors {
 function validateOnboarding(values: OnboardingValues, requireCredentials: boolean): AuthFieldErrors {
   const fieldErrors: AuthFieldErrors = {};
 
-  if (values.accountType !== "reseller" && values.accountType !== "customer") {
-    fieldErrors.accountType = "Escolha como deseja continuar.";
+  if (values.accountType !== "customer") {
+    fieldErrors.accountType =
+      "Cadastro de revendedora foi desativado no app. Esse acesso agora e criado manualmente.";
   }
 
   if (!values.fullName) {
@@ -96,10 +97,6 @@ function validateOnboarding(values: OnboardingValues, requireCredentials: boolea
 
   if (!values.phone) {
     fieldErrors.phone = "Informe um telefone para contato.";
-  }
-
-  if (values.accountType === "reseller" && !values.storeName) {
-    fieldErrors.storeName = "Informe o nome da loja ou nome comercial.";
   }
 
   if (values.accountType === "customer" && !values.resellerPublicId) {
@@ -285,6 +282,19 @@ export async function registerAction(
   }
 
   const values = readOnboardingValues(formData);
+
+  if (values.accountType !== "customer") {
+    return {
+      fieldErrors: {
+        accountType:
+          "Cadastro de revendedora foi desativado no app. Esse acesso agora e criado manualmente.",
+      },
+      message:
+        "Cadastro de revendedora foi desativado no app. Provisione essa conta manualmente no Supabase.",
+      status: "error",
+    };
+  }
+
   const fieldErrors = validateOnboarding(values, true);
 
   if (hasFieldErrors(fieldErrors)) {
