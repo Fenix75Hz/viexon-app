@@ -3,6 +3,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CurrentUserContext, Database } from "@/types/database";
 
+import { completeResellerOnboardingWithAdmin } from "./onboarding-admin";
+
 type CompleteResellerOnboardingInput = {
   fullName: string;
   phone?: string | null;
@@ -16,6 +18,12 @@ export async function completeResellerOnboarding(
   supabaseClient?: SupabaseClient<Database>,
 ): Promise<CurrentUserContext> {
   const supabase = supabaseClient ?? (await createSupabaseServerClient());
+  const adminContext = await completeResellerOnboardingWithAdmin(input, supabase);
+
+  if (adminContext) {
+    return adminContext;
+  }
+
   const { data, error } = await supabase.rpc("complete_reseller_onboarding", {
     p_full_name: input.fullName,
     p_phone: input.phone ?? null,

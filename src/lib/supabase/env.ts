@@ -33,6 +33,12 @@ function readRequiredEnv(
   return value ?? "";
 }
 
+function readOptionalEnv(name: "SUPABASE_SECRET_KEY" | "SUPABASE_SERVICE_ROLE_KEY") {
+  const value = process.env[name];
+
+  return hasValue(value) ? value ?? "" : null;
+}
+
 export function getSupabaseEnvStatus() {
   const hasUrl = hasValue(process.env.NEXT_PUBLIC_SUPABASE_URL);
   const hasAnonKey = hasValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
@@ -54,6 +60,21 @@ export function getSupabaseBrowserCredentials() {
   return {
     url: readRequiredEnv("NEXT_PUBLIC_SUPABASE_URL"),
     anonKey: readRequiredEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
+  };
+}
+
+export function getSupabaseAdminCredentials() {
+  const adminKey =
+    readOptionalEnv("SUPABASE_SECRET_KEY") ??
+    readOptionalEnv("SUPABASE_SERVICE_ROLE_KEY");
+
+  if (!adminKey) {
+    return null;
+  }
+
+  return {
+    key: adminKey,
+    url: readRequiredEnv("NEXT_PUBLIC_SUPABASE_URL"),
   };
 }
 

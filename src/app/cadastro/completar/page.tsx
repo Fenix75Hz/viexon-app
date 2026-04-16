@@ -10,6 +10,7 @@ import {
   getAuthenticatedUser,
   getCurrentUserContext,
 } from "@/lib/auth/get-current-user-role";
+import { rethrowIfRedirectError } from "@/lib/next/rethrow-redirect-error";
 import { getSupabaseEnvStatus } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
@@ -64,6 +65,7 @@ export default async function CompleteRegistrationPage({
       redirect("/auth/redirecionar");
     }
   } catch (error) {
+    rethrowIfRedirectError(error);
     resolutionError = getFriendlyAuthErrorMessage(error);
   }
 

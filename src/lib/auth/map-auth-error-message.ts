@@ -24,7 +24,7 @@ export function getFriendlyAuthErrorMessage(error: unknown) {
     normalizedMessage.includes("function private.ensure_profile_can_assume_role(uuid, name)") ||
     (normalizedMessage.includes("user_role") && normalizedMessage.includes("operator does not exist"))
   ) {
-    return "O banco de autenticacao esta com a rotina de perfil desatualizada. Aplique a migration corretiva do Supabase e tente novamente.";
+    return "O onboarding encontrou uma rotina antiga no Supabase. Confirme a migration corretiva no banco e a variavel SUPABASE_SECRET_KEY no deploy.";
   }
 
   switch (message) {
@@ -38,6 +38,8 @@ export function getFriendlyAuthErrorMessage(error: unknown) {
       return "Informe seu nome completo para continuar.";
     case "STORE_NAME_REQUIRED":
       return "Informe o nome da loja para concluir o cadastro.";
+    case "SLUG_ALREADY_IN_USE":
+      return "O identificador publico da revendedora ja esta em uso.";
     case "RESELLER_REQUIRED":
       return "Selecione uma revendedora valida antes de finalizar.";
     case "RESELLER_NOT_FOUND_OR_UNAVAILABLE":
