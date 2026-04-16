@@ -5,6 +5,7 @@ import {
   getCurrentUserContext,
 } from "./get-current-user-role";
 import { getFriendlyAuthErrorMessage } from "./map-auth-error-message";
+import { rethrowIfRedirectError } from "../next/rethrow-redirect-error";
 import {
   getPendingOnboardingFallbackMessage,
   resolvePendingOnboarding,
@@ -30,6 +31,7 @@ export async function redirectByRole(options: RedirectByRoleOptions = {}) {
   try {
     context = await getCurrentUserContext();
   } catch (error) {
+    rethrowIfRedirectError(error);
     redirect(
       `${options.onboardingPath ?? "/cadastro/completar"}?erro=${encodeURIComponent(
         getFriendlyAuthErrorMessage(error),
@@ -51,6 +53,7 @@ export async function redirectByRole(options: RedirectByRoleOptions = {}) {
         );
       }
     } catch (error) {
+      rethrowIfRedirectError(error);
       redirect(
         `${options.onboardingPath ?? "/cadastro/completar"}?erro=${encodeURIComponent(
           getFriendlyAuthErrorMessage(error),
