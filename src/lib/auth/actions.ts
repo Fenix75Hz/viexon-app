@@ -18,6 +18,7 @@ import {
   buildPendingOnboardingMetadata,
   completePendingOnboardingFromMetadata,
 } from "./pending-onboarding";
+import { createSupabaseAdminClient } from "../supabase/admin";
 
 type AccountType = UserRole;
 
@@ -179,6 +180,25 @@ function createRateLimitState(message: string): AuthActionState {
   };
 }
 
+async function persistPendingOnboardingMetadata(
+  userId: string,
+  metadata: Record<string, unknown>,
+) {
+  const admin = createSupabaseAdminClient();
+
+  if (!admin) {
+    return;
+  }
+
+  const { error } = await admin.auth.admin.updateUserById(userId, {
+    user_metadata: metadata,
+  });
+
+  if (error) {
+    throw error;
+  }
+}
+
 export async function loginAction(
   _previousState: AuthActionState,
   formData: FormData,
@@ -335,6 +355,13 @@ export async function registerAction(
       message: "Nao foi possivel criar sua conta agora. Tente novamente.",
       status: "error",
     };
+  }
+
+  try {
+    await persistPendingOnboardingMetadata(data.user.id, pendingOnboardingMetadata);
+  } catch {
+    // Supabase signUp already receives the same metadata. This admin update only hardens
+    // production against providers that occasionally drop the initial payload.
   }
 
   if (!data.session) {
