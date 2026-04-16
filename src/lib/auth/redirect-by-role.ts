@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 
-import { getCurrentUserContext } from "./get-current-user-role";
+import {
+  getAuthenticatedUser,
+  getCurrentUserContext,
+} from "./get-current-user-role";
 import { getFriendlyAuthErrorMessage } from "./map-auth-error-message";
 import {
   getPendingOnboardingFallbackMessage,
@@ -16,15 +19,27 @@ type RedirectByRoleOptions = {
 };
 
 export async function redirectByRole(options: RedirectByRoleOptions = {}) {
-  let context = await getCurrentUserContext();
+  const user = await getAuthenticatedUser();
 
-  if (!context) {
+  if (!user) {
     redirect(options.signedOutPath ?? "/login");
   }
 
-  if (!context.role || !context.onboarding_completed) {
+  let context: Awaited<ReturnType<typeof getCurrentUserContext>> = null;
+
+  try {
+    context = await getCurrentUserContext();
+  } catch (error) {
+    redirect(
+      `${options.onboardingPath ?? "/cadastro/completar"}?erro=${encodeURIComponent(
+        getFriendlyAuthErrorMessage(error),
+      )}`,
+    );
+  }
+
+  if (!context || !context.role || !context.onboarding_completed) {
     try {
-      const resolution = await resolvePendingOnboarding();
+      const resolution = await resolvePendingOnboarding(undefined, user);
 
       if (resolution.status === "completed" || resolution.status === "ready") {
         context = resolution.context;

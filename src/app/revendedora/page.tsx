@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { ResellerDashboard } from "@/components/dashboard/reseller-dashboard";
 import { getCurrentUserContext } from "@/lib/auth/get-current-user-role";
+import { getFriendlyAuthErrorMessage } from "@/lib/auth/map-auth-error-message";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getSupabaseEnvStatus } from "@/lib/supabase/env";
 import type { CurrentUserContext } from "@/types/database";
@@ -90,10 +91,16 @@ export default async function RevendedoraPage() {
     redirect("/login?erro=Preencha%20as%20variaveis%20publicas%20do%20Supabase%20para%20continuar.");
   }
 
-  const context = await getCurrentUserContext();
+  let context: Awaited<ReturnType<typeof getCurrentUserContext>> = null;
+
+  try {
+    context = await getCurrentUserContext();
+  } catch (error) {
+    redirect(`/cadastro/completar?erro=${encodeURIComponent(getFriendlyAuthErrorMessage(error))}`);
+  }
 
   if (!context) {
-    redirect("/login");
+    redirect("/auth/redirecionar");
   }
 
   if (!context.is_active) {

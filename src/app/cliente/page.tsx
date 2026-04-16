@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { ProtectedAreaShell } from "@/components/auth/protected-area-shell";
 import { getCurrentUserContext } from "@/lib/auth/get-current-user-role";
+import { getFriendlyAuthErrorMessage } from "@/lib/auth/map-auth-error-message";
 import { getSupabaseEnvStatus } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
@@ -19,10 +20,16 @@ export default async function ClientePage() {
     redirect("/login?erro=Preencha%20as%20variaveis%20publicas%20do%20Supabase%20para%20continuar.");
   }
 
-  const context = await getCurrentUserContext();
+  let context: Awaited<ReturnType<typeof getCurrentUserContext>> = null;
+
+  try {
+    context = await getCurrentUserContext();
+  } catch (error) {
+    redirect(`/cadastro/completar?erro=${encodeURIComponent(getFriendlyAuthErrorMessage(error))}`);
+  }
 
   if (!context) {
-    redirect("/login");
+    redirect("/auth/redirecionar");
   }
 
   if (!context.is_active) {

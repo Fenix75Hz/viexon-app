@@ -1,4 +1,5 @@
 import { cache } from "react";
+import type { User } from "@supabase/supabase-js";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CurrentUserContext, UserRole } from "@/types/database";
@@ -34,6 +35,24 @@ function isMissingAuthSessionError(error: unknown) {
 }
 
 export const getCurrentUserContext = cache(async (): Promise<CurrentUserContext | null> => {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data, error } = await supabase.rpc("get_my_user_context");
+
+  if (error) {
+    throw error;
+  }
+
+  return data[0] ?? null;
+});
+
+export const getAuthenticatedUser = cache(async (): Promise<User | null> => {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -52,13 +71,7 @@ export const getCurrentUserContext = cache(async (): Promise<CurrentUserContext 
     return null;
   }
 
-  const { data, error } = await supabase.rpc("get_my_user_context");
-
-  if (error) {
-    throw error;
-  }
-
-  return data[0] ?? null;
+  return user;
 });
 
 export const getCurrentUserRole = cache(async (): Promise<UserRole | null> => {

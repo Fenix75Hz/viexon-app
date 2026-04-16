@@ -70,6 +70,14 @@ export async function GET(request: Request) {
     if (!error) {
       return finalizeRedirect();
     }
+
+    return NextResponse.redirect(
+      buildRedirect(
+        request.url,
+        "/login",
+        getFriendlyAuthErrorMessage(error),
+      ),
+    );
   }
 
   if (tokenHash && type) {
@@ -81,6 +89,14 @@ export async function GET(request: Request) {
     if (!error) {
       return finalizeRedirect();
     }
+
+    return NextResponse.redirect(
+      buildRedirect(
+        request.url,
+        "/login",
+        getFriendlyAuthErrorMessage(error),
+      ),
+    );
   }
 
   return NextResponse.redirect(

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { AuthUnavailableState } from "@/components/auth/auth-unavailable-state";
 import { LoginForm } from "@/components/auth/login-form";
 import { AuthShell } from "@/components/auth/auth-shell";
-import { getCurrentUserContext } from "@/lib/auth/get-current-user-role";
+import { getAuthenticatedUser } from "@/lib/auth/get-current-user-role";
 import { getSupabaseEnvStatus } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
@@ -42,9 +42,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     );
   }
 
-  const context = await getCurrentUserContext();
+  const user = await getAuthenticatedUser();
 
-  if (context) {
+  if (user) {
     redirect("/auth/redirecionar");
   }
 

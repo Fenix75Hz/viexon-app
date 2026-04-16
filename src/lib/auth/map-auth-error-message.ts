@@ -17,6 +17,15 @@ function getErrorMessage(error: unknown) {
 
 export function getFriendlyAuthErrorMessage(error: unknown) {
   const message = getErrorMessage(error);
+  const normalizedMessage = message.toLowerCase();
+
+  if (
+    normalizedMessage.includes("operator does not exist: name <> user_role") ||
+    normalizedMessage.includes("function private.ensure_profile_can_assume_role(uuid, name)") ||
+    (normalizedMessage.includes("user_role") && normalizedMessage.includes("operator does not exist"))
+  ) {
+    return "O banco de autenticacao esta com a rotina de perfil desatualizada. Aplique a migration corretiva do Supabase e tente novamente.";
+  }
 
   switch (message) {
     case "Invalid login credentials":
