@@ -5,6 +5,11 @@ import type { CurrentUserContext, Database, UserRole } from "@/types/database";
 
 import { completeCustomerOnboarding } from "./complete-customer-onboarding";
 import { completeResellerOnboarding } from "./complete-reseller-onboarding";
+import {
+  getLatestUserMetadata,
+  getUserContextByProfileId,
+  repairUserContextFromRecords,
+} from "./onboarding-admin";
 
 type PendingOnboardingMetadata = {
   account_type: UserRole;
@@ -151,9 +156,31 @@ export async function resolvePendingOnboarding(
     };
   }
 
-  const metadata = readPendingOnboardingMetadata(user.user_metadata);
+  const repairedContext = await repairUserContextFromRecords(user.id);
+
+  if (repairedContext?.role && repairedContext.onboarding_completed && repairedContext.is_active) {
+    return {
+      status: "ready",
+      context: repairedContext,
+    };
+  }
+
+  let metadata = readPendingOnboardingMetadata(user.user_metadata);
 
   if (!metadata) {
+    metadata = readPendingOnboardingMetadata(await getLatestUserMetadata(user.id));
+  }
+
+  if (!metadata) {
+    const adminContext = await getUserContextByProfileId(user.id);
+
+    if (adminContext?.role && adminContext.onboarding_completed && adminContext.is_active) {
+      return {
+        status: "ready",
+        context: adminContext,
+      };
+    }
+
     return { status: "missing-metadata" };
   }
 

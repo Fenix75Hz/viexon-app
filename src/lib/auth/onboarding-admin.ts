@@ -132,6 +132,25 @@ async function generateUniqueResellerSlug(
   }
 }
 
+export async function getLatestUserMetadata(
+  profileId: string,
+  adminClient?: SupabaseClient<Database> | null,
+) {
+  const admin = adminClient ?? createSupabaseAdminClient();
+
+  if (!admin) {
+    return null;
+  }
+
+  const { data, error } = await admin.auth.admin.getUserById(profileId);
+
+  if (error) {
+    throw error;
+  }
+
+  return data.user?.user_metadata ?? null;
+}
+
 export async function getUserContextByProfileId(
   profileId: string,
   adminClient?: SupabaseClient<Database> | null,
@@ -203,6 +222,66 @@ export async function getUserContextByProfileId(
     reseller_public_id: ownResellerResult.data?.public_id ?? null,
     role: profileResult.data.role,
   };
+}
+
+export async function repairUserContextFromRecords(
+  profileId: string,
+  adminClient?: SupabaseClient<Database> | null,
+): Promise<CurrentUserContext | null> {
+  const admin = adminClient ?? createSupabaseAdminClient();
+
+  if (!admin) {
+    return null;
+  }
+
+  const context = await getUserContextByProfileId(profileId, admin);
+
+  if (!context) {
+    return null;
+  }
+
+  let repairedRole: UserRole | null = context.role;
+
+  if (!repairedRole) {
+    if (context.reseller_id) {
+      repairedRole = "reseller";
+    } else if (context.customer_id && context.linked_reseller_id) {
+      repairedRole = "customer";
+    }
+  }
+
+  const canBeReady =
+    (repairedRole === "reseller" && Boolean(context.reseller_id)) ||
+    (repairedRole === "customer" &&
+      Boolean(context.customer_id) &&
+      Boolean(context.linked_reseller_id));
+
+  if (!canBeReady) {
+    return context;
+  }
+
+  if (
+    context.role === repairedRole &&
+    context.onboarding_completed &&
+    context.is_active
+  ) {
+    return context;
+  }
+
+  const { error } = await admin
+    .from("profiles")
+    .update({
+      is_active: true,
+      onboarding_completed: true,
+      role: repairedRole,
+    })
+    .eq("id", profileId);
+
+  if (error) {
+    throw error;
+  }
+
+  return getUserContextByProfileId(profileId, admin);
 }
 
 export async function completeResellerOnboardingWithAdmin(

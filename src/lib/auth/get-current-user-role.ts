@@ -4,6 +4,11 @@ import type { User } from "@supabase/supabase-js";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CurrentUserContext, UserRole } from "@/types/database";
 
+import {
+  getUserContextByProfileId,
+  repairUserContextFromRecords,
+} from "./onboarding-admin";
+
 function isMissingAuthSessionError(error: unknown) {
   const message =
     error instanceof Error
@@ -46,10 +51,32 @@ export const getCurrentUserContext = cache(async (): Promise<CurrentUserContext 
   const { data, error } = await supabase.rpc("get_my_user_context");
 
   if (error) {
+    const repairedContext = await repairUserContextFromRecords(user.id);
+
+    if (repairedContext) {
+      return repairedContext;
+    }
+
+    const adminContext = await getUserContextByProfileId(user.id);
+
+    if (adminContext) {
+      return adminContext;
+    }
+
     throw error;
   }
 
-  return data[0] ?? null;
+  if (data[0]) {
+    return data[0];
+  }
+
+  const repairedContext = await repairUserContextFromRecords(user.id);
+
+  if (repairedContext) {
+    return repairedContext;
+  }
+
+  return getUserContextByProfileId(user.id);
 });
 
 export const getAuthenticatedUser = cache(async (): Promise<User | null> => {
